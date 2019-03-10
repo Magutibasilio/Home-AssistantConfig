@@ -1,0 +1,18 @@
+## Personalizacion ##
+homeassistant:
+  customize:
+    binary_sensor.entrada_puerta:
+      device_class: door
+
+ 
+## Grupo ##
+group:
+  entrada:
+    name: Entrada
+    entities:
+    - binary_sensor.entrada_puerta
+    - binary_sensor.entrada_pulsador
+    - binary_sensor.llavero_jcc
+    - binary_sensor.llavero_isset
+    - binary_sensor.llavero_ania
+    

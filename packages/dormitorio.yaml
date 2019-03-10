@@ -1,0 +1,27 @@
+## Sensores ##
+sensor:
+  - platform: template
+    sensors:
+      windchill_dormitorio:
+        value_template: '{{ ((states.sensor.dormitorio_temperatura.state|float) + 0.348*((((states.sensor.dormitorio_humedad.state|float)/100)*6.105)*(2.71828**((17.27*(states.sensor.dormitorio_temperatura.state|float))/(237.7+(states.sensor.dormitorio_temperatura.state|float))))) - 4.25) | round(2) }}'
+        friendly_name: Sensación térmica
+        icon_template: mdi:thermometer-lines
+        device_class: temperature   
+        unit_of_measurement: '°C'
+   
+    
+## Personalizacion ##
+homeassistant:
+  customize:
+    sensor.dormitorio_presion:
+      unit_of_measurement: mbar
+
+
+## Grupo ##
+group:
+  dormitorio:
+    name: Dormitorio
+    entities:
+    - sensor.dormitorio_temperatura
+    - sensor.dormitorio_humedad
+    - sensor.dormitorio_presion

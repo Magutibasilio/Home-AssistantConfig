@@ -1,0 +1,212 @@
+## Sensores ##
+sensor:
+  - platform: template
+    sensors:
+      battery_llavero_jcc:
+        friendly_name: "Llavero JCC"
+        value_template: >
+            {%- if states.binary_sensor.llavero_jcc.attributes.battery_level %}
+                {{ states.binary_sensor.llavero_jcc.attributes.battery_level|round }}
+            {% else %}
+                {{ states.binary_sensor.llavero_jcc.state }}
+            {%- endif %}
+        icon_template: '{%- if  states.binary_sensor.llavero_jcc.attributes.battery_level <= 5 %}mdi:battery-outline{%- elif states.binary_sensor.llavero_jcc.attributes.battery_level >= 95 %}mdi:battery{% else %}mdi:battery-{{(states.binary_sensor.llavero_jcc.attributes.battery_level|float / 10)|round*10}}{%- endif %}'
+        unit_of_measurement: '%'
+        device_class: battery
+
+      battery_llavero_isset:
+        friendly_name: "Llavero Iseet"
+        value_template: >
+            {%- if states.binary_sensor.llavero_isset.attributes.battery_level %}
+                {{ states.binary_sensor.llavero_isset.attributes.battery_level|round }}
+            {% else %}
+                {{ states.binary_sensor.llavero_isset.state }}
+            {%- endif %}
+        icon_template: '{%- if  states.binary_sensor.llavero_isset.attributes.battery_level <= 5 %}mdi:battery-outline{%- elif states.binary_sensor.llavero_isset.attributes.battery_level >= 95 %}mdi:battery{% else %}mdi:battery-{{(states.binary_sensor.llavero_isset.attributes.battery_level|float / 10)|round*10}}{%- endif %}'
+        unit_of_measurement: '%'
+        device_class: battery
+
+      battery_llavero_ania:
+        friendly_name: "Llavero Ania"
+        value_template: >
+            {%- if states.binary_sensor.llavero_ania.attributes.battery_level %}
+                {{ states.binary_sensor.llavero_ania.attributes.battery_level|round }}
+            {% else %}
+                {{ states.binary_sensor.llavero_ania.state }}
+            {%- endif %}
+        icon_template: '{%- if  states.binary_sensor.llavero_ania.attributes.battery_level <= 5 %}mdi:battery-outline{%- elif states.binary_sensor.llavero_ania.attributes.battery_level >= 95 %}mdi:battery{% else %}mdi:battery-{{(states.binary_sensor.llavero_ania.attributes.battery_level|float / 10)|round*10}}{%- endif %}'
+        unit_of_measurement: '%'
+        device_class: battery
+
+      battery_entrada_puerta:
+        friendly_name: "Entrada Puerta"
+        value_template: >
+            {%- if states.binary_sensor.entrada_puerta.attributes.battery_level %}
+                {{ states.binary_sensor.entrada_puerta.attributes.battery_level|round }}
+            {% else %}
+                {{ states.binary_sensor.entrada_puerta.state }}
+            {%- endif %}
+        icon_template: '{%- if  states.binary_sensor.entrada_puerta.attributes.battery_level <= 5 %}mdi:battery-outline{%- elif states.binary_sensor.entrada_puerta.attributes.battery_level >= 95 %}mdi:battery{% else %}mdi:battery-{{(states.binary_sensor.entrada_puerta.attributes.battery_level|float / 10)|round*10}}{%- endif %}'
+        unit_of_measurement: '%'
+        device_class: battery
+
+      battery_comedor_ventana_izq:
+        friendly_name: "Comedor Ventana Izquierda"
+        value_template: >
+            {%- if states.binary_sensor.comedor_ventana_izq.attributes.battery_level %}
+                {{ states.binary_sensor.comedor_ventana_izq.attributes.battery_level|round }}
+            {% else %}
+                {{ states.binary_sensor.comedor_ventana_izq.state }}
+            {%- endif %}
+        icon_template: '{%- if  states.binary_sensor.comedor_ventana_izq.attributes.battery_level <= 5 %}mdi:battery-outline{%- elif states.binary_sensor.comedor_ventana_izq.attributes.battery_level >= 95 %}mdi:battery{% else %}mdi:battery-{{(states.binary_sensor.comedor_ventana_izq.attributes.battery_level|float / 10)|round*10}}{%- endif %}'
+        unit_of_measurement: '%'
+        device_class: battery
+
+      battery_comedor_ventana_der:
+        friendly_name: "Comedor Ventaba Derecha"
+        value_template: >
+            {%- if states.binary_sensor.comedor_ventana_der.attributes.battery_level %}
+                {{ states.binary_sensor.comedor_ventana_der.attributes.battery_level|round }}
+            {% else %}
+                {{ states.binary_sensor.comedor_ventana_der.state }}
+            {%- endif %}
+        icon_template: '{%- if  states.binary_sensor.comedor_ventana_der.attributes.battery_level <= 5 %}mdi:battery-outline{%- elif states.binary_sensor.comedor_ventana_der.attributes.battery_level >= 95 %}mdi:battery{% else %}mdi:battery-{{(states.binary_sensor.comedor_ventana_der.attributes.battery_level|float / 10)|round*10}}{%- endif %}'
+        unit_of_measurement: '%'
+        device_class: battery
+
+      battery_comedor_aa:
+        friendly_name: "Comedor Aire Acondicionado"
+        value_template: >
+            {%- if states.binary_sensor.comedor_aire_acondicionado.attributes.battery_level %}
+                {{ states.binary_sensor.comedor_aire_acondicionado.attributes.battery_level|round }}
+            {% else %}
+                {{ states.binary_sensor.comedor_aire_acondicionado.state }}
+            {%- endif %}
+        icon_template: '{%- if  states.binary_sensor.comedor_aire_acondicionado.attributes.battery_level <= 5 %}mdi:battery-outline{%- elif states.binary_sensor.comedor_aire_acondicionado.attributes.battery_level >= 95 %}mdi:battery{% else %}mdi:battery-{{(states.binary_sensor.comedor_aire_acondicionado.attributes.battery_level|float / 10)|round*10}}{%- endif %}'
+        unit_of_measurement: '%'
+        device_class: battery
+
+      battery_cocina_movimiento:
+        friendly_name: "Cocina Movimiento"
+        value_template: >
+            {%- if states.binary_sensor.cocina_movimiento.attributes.battery_level %}
+                {{ states.binary_sensor.cocina_movimiento.attributes.battery_level|round }}
+            {% else %}
+                {{ states.binary_sensor.cocina_movimiento.state }}
+            {%- endif %}
+        icon_template: '{%- if  states.binary_sensor.cocina_movimiento.attributes.battery_level <= 5 %}mdi:battery-outline{%- elif states.binary_sensor.cocina_movimiento.attributes.battery_level >= 95 %}mdi:battery{% else %}mdi:battery-{{(states.binary_sensor.cocina_movimiento.attributes.battery_level|float / 10)|round*10}}{%- endif %}'
+        unit_of_measurement: '%'
+        device_class: battery
+
+      battery_comedor_movimiento:
+        friendly_name: "Comedor Movimiento"
+        value_template: >
+            {%- if states.binary_sensor.comedor_movimiento.attributes.battery_level %}
+                {{ states.binary_sensor.comedor_movimiento.attributes.battery_level|round }}
+            {% else %}
+                {{ states.binary_sensor.comedor_movimiento.state }}
+            {%- endif %}
+        icon_template: '{%- if  states.binary_sensor.comedor_movimiento.attributes.battery_level <= 5 %}mdi:battery-outline{%- elif states.binary_sensor.comedor_movimiento.attributes.battery_level >= 95 %}mdi:battery{% else %}mdi:battery-{{(states.binary_sensor.comedor_movimiento.attributes.battery_level|float / 10)|round*10}}{%- endif %}'
+        unit_of_measurement: '%'
+        device_class: battery
+
+      battery_entrada_pulsador:
+        friendly_name: "Entrada Pulsador"
+        value_template: >
+            {%- if states.binary_sensor.entrada_pulsador.attributes.battery_level %}
+                {{ states.binary_sensor.entrada_pulsador.attributes.battery_level|round }}
+            {% else %}
+                {{ states.binary_sensor.entrada_pulsador.state }}
+            {%- endif %}
+        icon_template: '{%- if  states.binary_sensor.entrada_pulsador.attributes.battery_level <= 5 %}mdi:battery-outline{%- elif states.binary_sensor.entrada_pulsador.attributes.battery_level >= 95 %}mdi:battery{% else %}mdi:battery-{{(states.binary_sensor.comedor_movimiento.attributes.battery_level|float / 10)|round*10}}{%- endif %}'
+        unit_of_measurement: '%'
+        device_class: battery
+
+      battery_comedor_temperatura:
+        friendly_name: "Comedor Temperatura"
+        value_template: >
+            {%- if states.sensor.comedor_temperatura.attributes.battery_level %}
+                {{ states.sensor.comedor_temperatura.attributes.battery_level|round }}
+            {% else %}
+                {{ states.sensor.comedor_temperatura.state }}
+            {%- endif %}
+        icon_template: '{%- if  states.sensor.comedor_temperatura.attributes.battery_level <= 5 %}mdi:battery-outline{%- elif states.sensor.comedor_temperatura.attributes.battery_level >= 95 %}mdi:battery{% else %}mdi:battery-{{(states.sensor.comedor_temperatura.attributes.battery_level|float / 10)|round*10}}{%- endif %}'
+        unit_of_measurement: '%'
+        device_class: battery
+
+      battery_dormitorio_temperatura:
+        friendly_name: "Dormitorio Temperatura"
+        value_template: >
+            {%- if states.sensor.dormitorio_temperatura.attributes.battery_level %}
+                {{ states.sensor.dormitorio_temperatura.attributes.battery_level|round }}
+            {% else %}
+                {{ states.sensor.dormitorio_temperatura.state }}
+            {%- endif %}
+        icon_template: '{%- if  states.sensor.dormitorio_temperatura.attributes.battery_level <= 5 %}mdi:battery-outline{%- elif states.sensor.dormitorio_temperatura.attributes.battery_level >= 95 %}mdi:battery{% else %}mdi:battery-{{(states.sensor.dormitorio_temperatura.attributes.battery_level|float / 10)|round*10}}{%- endif %}'
+        unit_of_measurement: '%'
+        device_class: battery
+
+      battery_ania_temperatura:
+        friendly_name: "Ania Temperatura"
+        value_template: >
+            {%- if states.sensor.ania_temperatura.attributes.battery_level %}
+                {{ states.sensor.ania_temperatura.attributes.battery_level|round }}
+            {% else %}
+                {{ states.sensor.ania_temperatura.state }}
+            {%- endif %}
+        icon_template: '{%- if  states.sensor.ania_temperatura.attributes.battery_level <= 5 %}mdi:battery-outline{%- elif states.sensor.ania_temperatura.attributes.battery_level >= 95 %}mdi:battery{% else %}mdi:battery-{{(states.sensor.ania_temperatura.attributes.battery_level|float / 10)|round*10}}{%- endif %}'
+        unit_of_measurement: '%'
+        device_class: battery
+
+      battery_balcon_temperatura:
+        friendly_name: "Balcon Temperatura"
+        value_template: >
+            {%- if states.sensor.balcon_temperatura.attributes.battery_level %}
+                {{ states.sensor.balcon_temperatura.attributes.battery_level|round }}
+            {% else %}
+                {{ states.sensor.balcon_temperatura.state }}
+            {%- endif %}
+        icon_template: '{%- if  states.sensor.balcon_temperatura.attributes.battery_level <= 5 %}mdi:battery-outline{%- elif states.sensor.balcon_temperatura.attributes.battery_level >= 95 %}mdi:battery{% else %}mdi:battery-{{(states.sensor.balcon_temperatura.attributes.battery_level|float / 10)|round*10}}{%- endif %}'
+        unit_of_measurement: '%'
+        device_class: battery
+
+## Automatizaciones ##
+#automation:
+#  - alias: Avisa Low Battery
+#    trigger:
+#      - platform: state
+#        entity_id: binary_sensor.llavero_jcc
+#    condition:
+#      - condition: state
+#        entity_id: 'switch.comedor_enchufe'
+#        state: 'off'
+#    action:
+#      - service: notify.administrador
+#        data_template:
+#          message: >-
+#            La batería del {{ states('sensor.battery_status') }}
+
+
+## Personalizacion ##
+
+ 
+## Grupo ##
+group:
+  batteries:
+    name: Baterias
+    control: hidden
+    entities:
+    - sensor.battery_llavero_jcc
+    - sensor.battery_llavero_isset
+    - sensor.battery_llavero_ania
+    - sensor.battery_entrada_puerta
+    - sensor.battery_entrada_pulsador
+    - sensor.battery_comedor_temperatura
+    - sensor.battery_comedor_movimiento
+    - sensor.battery_comedor_ventana_izq
+    - sensor.battery_comedor_ventana_der
+    - sensor.battery_comedor_aa
+    - sensor.battery_cocina_movimiento
+    - sensor.battery_dormitorio_temperatura
+    - sensor.battery_ania_temperatura
+    - sensor.battery_balcon_temperatura

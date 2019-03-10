@@ -1,0 +1,82 @@
+## Sensores ##
+device_tracker:
+  - platform: bluetooth_le_tracker
+    track_new_devices: false
+    interval_seconds: 60
+    consider_home: 240
+    blacklist_names:
+      - 'dtvbluetooth'
+      - 'tv_samsung_led46'
+      - 'ulefone_s7'
+      - 'mibox_ania'
+      - 'ble_3c_bd_'
+      - 'ble_68_a8_'
+      - 'ble_58_d8_'
+      - 'mibcs'
+#    hci_device: 'hci0'
+#    hide_unnamed: true
+
+#  - platform: bluetooth_le_tracker
+#    interval_seconds: 60
+#    new_device_defaults:
+#      track_new_devices: true
+
+#  - platform: bluetooth_tracker
+#    interval_seconds: 60
+#    new_device_defaults:
+#      track_new_devices: true
+      
+input_select:
+  origin:
+    name: origen
+    icon: mdi:arrow-expand-right
+    options:
+      - Casa
+      - Trabajo
+      - Colegio
+  destination:
+    name: destino
+    icon: mdi:arrow-collapse-right
+    options:
+      - Casa
+      - Trabajo
+      - Colegio
+      
+sensor:
+  - platform: template
+    sensors:
+       orig_address:
+         value_template: >-
+            {%- if is_state("input_select.origin", "Casa")  -%}
+              calle casa, nn, CP Barcelona, España
+            {%- elif is_state("input_select.origin", "Trabajo")  -%}
+              calle trabajo, nn, CP Barcelona, España
+            {%- elif is_state("input_select.origin", "Colegio")  -%}
+              calle colegio, nn, 08018 Barcelona, España
+            {%- else -%}
+              Madrid, España
+            {%- endif %}
+  - platform: template
+    sensors:
+       dest_address:
+         value_template: >-
+            {%- if is_state("input_select.destination", "Casa")  -%}
+              calle casa, nn, CP Barcelona, España
+            {%- elif is_state("input_select.destination", "Trabajo")  -%}
+              calle trabajo, nn, CP Barcelona, España
+            {%- elif is_state("input_select.destination", "Colegio")  -%}
+              calle colegio, nn, 08018 Barcelona, España
+            {%- else -%}
+              Sevilla, España
+            {%- endif %}
+
+  - platform: waze_travel_time
+    name: "Trayecto"
+    origin: sensor.orig_address
+    destination: sensor.dest_address
+    region: 'EU'
+
+# https://www.home-assistant.io/components/device_tracker.bluetooth_le_tracker/
+# https://community.home-assistant.io/t/solved-error-setting-up-platform-bluetooth-le-tracker/83187
+# https://github.com/home-assistant/home-assistant/issues/16698
+# https://community.home-assistant.io/t/ble-custom-component/48355/13

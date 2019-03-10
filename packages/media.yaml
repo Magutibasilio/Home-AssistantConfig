@@ -1,0 +1,90 @@
+## Dispositivos ##
+media_player:
+  - platform: emby
+    host: 192.168.3.10
+    port: 8096
+    api_key: !secret emby_key
+
+  - platform: xiaomi_miio_gateway
+    host: 192.168.3.201
+    token: !secret xiaomi_aqara_token
+
+alexa_media:
+  accounts:
+  - email: !secret jcc_mail
+    password: !secret alexa_psw
+    url: "amazon.es"
+
+
+## Informacion ##
+sensor:
+  - platform: systemmonitor
+    scan_interval: 60 
+    resources:
+      - type: process
+        arg: ffmpeg
+
+  - platform: command_line
+    name: ffmpeg cpu
+    command: top -b -n 1 | head -n 50 | grep -i ffmpeg | awk '{print $9}'
+    unit_of_measurement: "%"
+
+
+## Comandos  ##
+shell_command:
+  adb: '/usr/bin/adb connect 192.168.3.209'
+
+
+## Automatizaciones ##
+automation:
+  - alias: 'A_ ADB start'
+    trigger:
+      platform: state
+      entity_id: device_tracker.box_tv
+      to: 'home'
+    condition:
+      - condition: state
+        entity_id: media_player.mibox_ania
+        state: 'Unavailable'
+      - condition: state
+        entity_id: switch.ania_media
+        state: 'off'
+    action:
+      - service: shell_command.adb
+        data_template:
+          ip_adb: '192.168.9.12'
+
+
+## Personalizacion ##
+homeassistant:
+  customize:
+    sensor.process_ffmpeg:
+      friendly_name: Activo
+      icon: mdi:video-vintage
+    sensor.ffmpeg_cpu:
+      friendly_name: Uso CPU
+      icon: mdi:memory
+
+
+## Grupo ##
+group:
+  info_ffmpeg:
+    name: Transcodificacion
+    entities:
+    - sensor.process_ffmpeg
+    - sensor.ffmpeg_cpu
+
+  media_player:
+    name: Reproductores
+    entities:
+    - media_player.samsung_led46_ue46f7000
+    - media_player.chromecast
+    - media_player.emby_samsung_tv_samsung_ue46f7000
+    - media_player.emby_emby_for_android_mobile_op3_jcc
+    - media_player.emby_emby_for_android_mobile_oneplus_a3003
+    - media_player.emby_emby_mobile_chrome_4
+    - media_player.emby_emby_mobile_chrome_5
+    - media_player.emby_emby_for_android_mobile_ulefone_s7
+    - media_player.emby_emby_for_android_mobile_smj530f
+    - media_player.mibox_ania
+    - media_player.xiaomi_gateway_radio

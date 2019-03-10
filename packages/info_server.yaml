@@ -1,0 +1,246 @@
+## Informacion ##
+sensor:
+  - platform: template
+    sensors:
+      server_current_power:
+        entity_id: sensor.time
+        value_template: '{{states.switch.servidor_medidor.attributes.load_power}}'
+        unit_of_measurement: W
+        icon_template: mdi:flash
+
+  - platform: template
+    sensors:
+      last_boot_templated:
+        entity_id: sensor.last_boot
+        icon_template: mdi:clock
+        value_template: "{{ as_timestamp(states.sensor.last_boot.state) | timestamp_custom('%d/%m/%Y %H:%M') }}"
+
+  - platform: template
+    sensors:
+      server_uptime:
+        entity_id: sensor.time
+        icon_template: mdi:clock-start
+        value_template: >
+          {% set up_time = ((as_timestamp(now()) - as_timestamp(states('sensor.last_boot'))) / 60) | int %}
+          {% set minutes = (up_time % 60) | int %}
+          {% set hours = ((up_time % 1440) / 60) | int %}
+          {% set days = (up_time / 1440) | int %}
+          {{ days }}d {{ ' : ' }} {{ hours }}h {{ ' : ' }} {{ minutes }}m
+
+  - platform: cpuspeed
+
+  - platform: command_line
+    name: CPU Temperature
+    command: "cat /sys/class/thermal/thermal_zone0/temp"
+    unit_of_measurement: "°C"
+    value_template: '{{ value | multiply(0.001) | round(1) }}'
+    
+  - platform: systemmonitor
+    scan_interval: 60 
+    resources:
+      - type: last_boot
+      - type: processor_use
+      - type: memory_use_percent
+      - type: load_15m
+      - type: disk_use_percent
+        arg: /
+      - type: disk_free
+        arg: /
+      - type: disk_use_percent
+        arg: /mnt/Mis Documentos
+      - type: disk_free
+        arg: /mnt/Mis Documentos
+      - type: disk_use_percent
+        arg: /mnt/Server_Media
+      - type: disk_free
+        arg: /mnt/Server_Media
+      - type: process
+        arg: xfe
+
+  - platform: hddtemp
+    disks:
+      - /dev/sda
+
+  - platform: command_line
+    name: amule cpu
+    command: "top -b -n 1 | head -n 50 | grep -i xfe | awk '{print $9}'"
+    unit_of_measurement: "%"
+
+  - platform: cert_expiry
+    host: jccserver.ddns.us
+    port: 8123
+    scan_interval: 10800
+
+  - platform: template
+    sensors:
+      current_power_cost_server:
+        value_template: '{{ ((states.sensor.server_current_power.state|float) * (states.sensor.actual_eur_kwh.state|float) / 1000) | round(5) }}'
+        friendly_name: 'Coste Electricidad Actual'
+        icon_template: mdi:currency-eur
+        unit_of_measurement: '€/H'
+
+  - platform: integration
+    name: day_power_cost_server
+    source: sensor.current_power_cost_server
+    round: 5
+    unit: €
+
+utility_meter:
+  server_cost_hourly:
+    source: sensor.current_power_cost_server
+    cycle: hourly
+  server_cost_daily:
+    source: sensor.current_power_cost_server
+    cycle: daily
+  server_cost_weekly:
+    source: sensor.current_power_cost_server
+    cycle: weekly
+  server_cost_monthly:
+    source: sensor.current_power_cost_server
+    cycle: monthly
+  server_cost_yearly:
+    source: sensor.current_power_cost_server
+    cycle: yearly
+
+switch:
+  - platform: template
+    switches:
+      amule:
+        value_template: "{{ is_state('sensor.process_xfe', 'on') }}"
+        turn_on:
+          service: shell_command.amule_on
+        turn_off:
+          service: shell_command.amule_off
+          
+
+## Comandos  ##
+shell_command:
+  amule_on: /home/homeassistant/.homeassistant/scripts/amule_on.sh
+  amule_off: /home/homeassistant/.homeassistant/scripts/amule_off.sh
+
+
+## Automatizaciones ##
+automation:
+#  - alias: gateway_error
+##    initial state: true
+#    trigger:
+#      platform: state
+#      entity_id: media_player.xiaomi_gateway_radio
+#      to: 'unavailable'
+#      for: '00:01:00'
+#    condition:
+#      condition: or
+#      conditions:
+#        - condition: template
+#          value_template: '{{ states.sun.sun.attributes.elevation < 4 }}'
+#        - condition: template
+#          value_template: '{{ states.sensor.sensorluz_7_0.state < 10 }}'
+#    action:
+#      - service: homeassistant.restart
+
+    
+## Personalizacion ##
+homeassistant:
+  customize:
+    sensor.server_current_power:
+      friendly_name: Consumo servidor
+    sensor.last_boot:
+      hidden: true
+    sensor.last_boot_templated:
+      friendly_name: Último reinicio
+    sensor.server_uptime:
+      friendly_name: Tiempo activo
+    sensor.processor_use:
+      friendly_name: CPU Uso
+    sensor.cpu_temperature:
+      friendly_name: CPU Temperatura
+    sensor.cpu_speed:
+      friendly_name: CPU Velocidad
+    sensor.load_15m:
+      friendly_name: Indice carga sistema (15m)
+    sensor.memory_use_percent:
+      friendly_name: RAM usada
+      icon: mdi:chip
+    sensor.disk_free:
+      friendly_name: HDD Sistema (espacio libre)
+      icon: mdi:harddisk
+    sensor.disk_use_percent:
+      friendly_name: HDD Sistema (uso)
+      icon: mdi:harddisk
+    sensor.disk_free_mnt_mis_documentos:
+      friendly_name: HDD Documentos (espacio libre)
+      icon: mdi:harddisk
+    sensor.disk_use_percent_mnt_mis_documentos:
+      friendly_name: HDD Documentos (uso)
+      icon: mdi:harddisk
+    sensor.hd_temperature_dev_sda:
+      friendly_name: HDD Documentos (temperatura)
+      icon: mdi:harddisk
+    sensor.disk_free_mnt_server_media:
+      friendly_name: HDD Media (espacio libre)
+      icon: mdi:harddisk
+    sensor.disk_use_percent_mnt_server_media:
+      friendly_name: HDD Media (uso)
+      icon: mdi:harddisk
+    sensor.process_amule:
+      friendly_name: Activo
+      icon: mdi:cloud-download
+    sensor.amule_cpu:
+      friendly_name: Uso CPU
+      icon: mdi:memory
+    sensor.ssl_certificate_expiry:
+      friendly_name: Caducidad SSL
+    sensor.day_power_cost_server:
+      friendly_name: Gasto acumulado (Día)
+      icon: mdi:currency-eur
+    sensor.server_cost_hourly:
+      friendly_name: Gasto acumulado (Hora)
+      icon: mdi:currency-eur
+      unit_of_measurement: '€'
+    sensor.server_cost_daily:
+      friendly_name: Gasto acumulado (Día)
+      icon: mdi:currency-eur
+      unit_of_measurement: '€'
+    sensor.server_cost_weekly:
+      friendly_name: Gasto acumulado (Semana)
+      icon: mdi:currency-eur
+      unit_of_measurement: '€'
+    sensor.server_cost_monthly:
+      friendly_name: Gasto acumulado (Mes)
+      icon: mdi:currency-eur
+      unit_of_measurement: '€'
+    sensor.server_cost_yearly:
+      friendly_name: Gasto acumulado (Año)
+      icon: mdi:currency-eur
+      unit_of_measurement: '€'
+
+
+## Grupo ##
+group:
+  info_server:
+    name: Servidor
+    entities:
+    - sensor.time
+    - sensor.date_template
+    - sensor.server_current_power
+    - sensor.last_boot_templated
+    - sensor.server_uptime
+    - sensor.processor_use
+    - sensor.cpu_speed
+    - sensor.cpu_temperature
+    - sensor.load_15m
+    - sensor.memory_use_percent
+    - sensor.disk_free
+    - sensor.disk_use_percent
+    - sensor.disk_free_mnt_mis_documentos
+    - sensor.disk_use_percent_mnt_mis_documentos
+    - sensor.hd_temperature_dev_sda
+    - sensor.disk_free_mnt_server_media
+    - sensor.disk_use_percent_mnt_server_media
+    
+  info_amule:
+    name: amule
+    entities:
+    - sensor.process_xfe
+    - sensor.amule_cpu
+    - switch.amule

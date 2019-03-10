@@ -1,0 +1,286 @@
+# https://github.com/smartHomeHub/SmartIR
+# https://github.com/vpnmaster/homeassistant-custom-components/pull/75
+# https://github.com/vpnmaster/homeassistant-custom-components/pull/85
+# https://github.com/vpnmaster/homeassistant-custom-components/issues/113
+
+## Dispositivo ##
+switch:
+  - platform: broadlink
+    host: 192.168.3.202
+    mac: '34:EA:xx:xx'
+
+climate:
+  - platform: smartir
+    name: AA Comedor
+    device_code: 1060
+    controller_send_service: switch.broadlink_send_packet_192_168_3_202
+    temperature_sensor: sensor.comedor_temperatura
+    humidity_sensor: sensor.comedor_humedad
+
+    
+## Sensores ##
+input_number:
+  aa_comedor_temp_heat_on:
+    name: Calor ON
+    min: 15
+    max: 22
+    step: 1
+    icon: mdi:trending-down
+  aa_comedor_temp_heat_auto:
+    name: Temperatura Calor
+    min: 18
+    max: 25
+    step: 1
+    icon: mdi:temperature-celsius
+  aa_comedor_temp_cool_on:
+    name: Frio ON
+    min: 27
+    max: 35
+    step: 1
+    icon: mdi:trending-up
+  aa_comedor_temp_cool_auto:
+    name: Temperatura Frio
+    min: 25
+    max: 32
+    step: 1
+    icon: mdi:temperature-celsius
+
+input_datetime:
+  aa_comedor_on_laborable:
+    name: Hora encendido
+    has_date: false
+    has_time: true
+  aa_comedor_off_laborable:
+    name: Hora apagado
+    has_date: false
+    has_time: true
+  aa_comedor_on_festivo:
+    name: Hora encendido
+    has_date: false
+    has_time: true
+  aa_comedor_off_festivo:
+    name: Hora apagado
+    has_date: false
+    has_time: true
+
+
+## Scripts ##
+script:
+  aa_comedor_off:
+    sequence:
+      - condition: state
+        entity_id: binary_sensor.comedor_aire_acondicionado
+        state: 'on'
+      - service: climate.set_operation_mode
+        data:
+          entity_id: climate.aa_comedor
+          operation_mode: "off"
+  aa_comedor_heat:
+    sequence:
+      - service: climate.set_operation_mode
+        data:
+          entity_id: climate.aa_comedor
+          operation_mode: heat
+      - delay: '00:00:02'
+      - service: climate.set_temperature
+        data_template:
+          entity_id: climate.aa_comedor
+          temperature: "{{ states.input_number.aa_comedor_temp_heat_auto.state }}"
+      - delay: '00:00:02'
+      - service: climate.set_fan_mode
+        data:
+          entity_id: climate.aa_comedor
+          fan_mode: high
+  aa_comedor_cool:
+    sequence:
+      - service: climate.set_operation_mode
+        data:
+          entity_id: climate.aa_comedor
+          operation_mode: cool
+      - delay: '00:00:02'
+      - service: climate.set_temperature
+        data_template:
+          entity_id: climate.aa_comedor
+          temperature: "{{ states.input_number.aa_comedor_temp_cool_auto.state }}"
+      - delay: '00:00:02'
+      - service: climate.set_fan_mode
+        data:
+          entity_id: climate.aa_comedor
+          fan_mode: high
+  aa_comedor_auto:
+    sequence:
+      - condition: state
+        entity_id: binary_sensor.comedor_aire_acondicionado
+        state: 'off'
+      - service_template: >
+          {% if (states.sensor.comedor_temperatura.state | float) <= (states.input_number.aa_comedor_temp_cool_on.state | int) %}
+            script.aa_comedor_heat
+          {% elif (states.sensor.comedor_temperatura.state | float) >= (states.input_number.aa_comedor_temp_heat_on.state | int) %}
+            script.aa_comedor_cool
+          {% endif %}
+
+
+## Automatizaciones ##
+automation:
+  - alias: dash1
+    initial_state: true
+    trigger:
+      - platform: event
+        event_type: dash1
+    action:
+      - service_template: >
+          {% if is_state('binary_sensor.comedor_aire_acondicionado', 'on') %}
+            script.aa_comedor_off
+          {%- else -%}
+            script.aa_comedor_auto
+          {% endif %}
+#          {% elif (states('sensor.comedor_temperatura')| int < states('input_number.aa_comedor_temp_heat_on')|int) or (states('sensor.comedor_temperatura')| int > states('input_number.aa_comedor_temp_cool_on')|int) %}
+
+  - alias: aa_comedor_close
+    hide_entity: True
+    trigger:
+      platform: state
+      entity_id: binary_sensor.comedor_aire_acondicionado
+      to: 'closed'
+    action:
+      - service: python_script.set_state
+        data_template:
+          entity_id: climate.aa_comedor
+          state: off
+ #         icon: mdi:power
+  - alias: aa_comedor_open
+    hide_entity: True
+    trigger:
+      platform: state
+      entity_id: binary_sensor.comedor_aire_acondicionado
+      to: 'open'
+    action:
+      - service: python_script.set_state
+        data_template:
+          entity_id: climate.aa_comedor
+          state: heat
+#          icon: mdi:fire
+#          icon: mdi:snowflake
+
+#curl -X POST -H "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI4NGIwMTYwM2RkYmE0OWYzOWQyMTg4ODY0MTU2NTMxNSIsImlhdCI6MTU0ODcxMjgzNiwiZXhwIjoxODY0MDcyODM2fQ.SNHnTpICg6TFVJ1hQZME1ijWkj-MBIjeXC3noreVpHI" \
+#       -H "Content-Type: application/json" \
+#       -d '{"state": "off"}' \
+#       https://192.168.3.10:8123/api/states/climate.aa_comedor
+#	   
+#curl -X POST -H "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI4NGIwMTYwM2RkYmE0OWYzOWQyMTg4ODY0MTU2NTMxNSIsImlhdCI6MTU0ODcxMjgzNiwiZXhwIjoxODY0MDcyODM2fQ.SNHnTpICg6TFVJ1hQZME1ijWkj-MBIjeXC3noreVpHI" -H "Content-Type: application/json" -d '{"state": "off"}' https://192.168.3.10:8123/api/states/climate.aa_comedor -k
+
+
+  - alias: aa_comedor_on_laborable
+    trigger:
+      platform: template
+      value_template: "{{ states('sensor.time') == (states.input_datetime.aa_comedor_on_laborable.attributes.timestamp | int | timestamp_custom('%H:%M', False)) }}"
+    condition:
+      condition: state
+      entity_id: 'binary_sensor.workday_sensor'
+      state: 'on'
+    action:
+    - service: script.aa_comedor_auto
+  - alias: aa_comedor_off_laborable
+    trigger:
+      platform: template
+      value_template: "{{ states('sensor.time') == (states.input_datetime.aa_comedor_off_laborable.attributes.timestamp | int | timestamp_custom('%H:%M', False)) }}"
+    condition:
+      condition: state
+      entity_id: 'binary_sensor.workday_sensor'
+      state: 'on'
+    action:
+    - service: script.aa_comedor_off
+  - alias: aa_comedor_on_festivo
+    trigger:
+      platform: template
+      value_template: "{{ states('sensor.time') == (states.input_datetime.aa_comedor_on_festivo.attributes.timestamp | int | timestamp_custom('%H:%M', False)) }}"
+    condition:
+      condition: state
+      entity_id: 'binary_sensor.workday_sensor'
+      state: 'off'
+    action:
+    - service: script.aa_comedor_auto
+  - alias: aa_comedor_off_festivo
+    trigger:
+      platform: template
+      value_template: "{{ states('sensor.time') == (states.input_datetime.aa_comedor_off_festivo.attributes.timestamp | int | timestamp_custom('%H:%M', False)) }}"
+    condition:
+      condition: state
+      entity_id: 'binary_sensor.workday_sensor'
+      state: 'off'
+    action:
+    - service: script.aa_comedor_off
+
+
+## Grupo ##
+group:
+  aa_comedor_automatismos:
+    name: Horarios programados
+    icon: mdi:calendar-clock
+    entities:
+    - automation.aa_comedor_on_laborable
+    - automation.aa_comedor_off_laborable
+    - automation.aa_comedor_on_festivo
+    - automation.aa_comedor_off_festivo
+
+    
+## Personalizacion ##
+homeassistant:
+  customize:
+    binary_sensor.comedor_aire_acondicionado:
+      friendly_name: Comedor - Aire acondicionado
+      icon_template: >-
+        {% if is_state('climate.aa_comedor', 'heat') %}
+          mdi:fire
+        {% elif is_state('climate.aa_comedor', 'cool') %}
+          mdi:snowflake
+        {% elif is_state('climate.aa_comedor', 'dry') %}
+          mdi:water-percent
+        {% else %}
+          mdi:power
+        {% endif %}    
+      icon_color: >-
+        {% if is_state('climate.aa_comedor', 'heat') %}
+          red
+        {% elif is_state('climate.aa_comedor', 'cool') %}
+          blue
+        {% endif %}    
+      state_template: >-
+        {% if is_state('climate.aa_comedor', 'heat') %}
+          Calor
+        {% elif is_state('climate.aa_comedor', 'cool') %}
+          Frio
+        {% elif is_state('climate.aa_comedor', 'dry') %}
+          Deshumidificador
+        {% else %}
+          Apagado
+        {% endif %}    
+    input_number.aa_comedor_temp_heat_on:
+      friendly_name: Calor ON
+    input_number.aa_comedor_temp_cool_on:
+      friendly_name: Frio ON
+    input_number.aa_comedor_temp_heat_auto:
+      friendly_name: Temperatura Calor
+    input_number.aa_comedor_temp_cool_auto:
+      friendly_name: Temperatura Frio
+    input_datetime.aa_comedor_on_laborable:
+      icon: mdi:clock-outline   
+    input_datetime.aa_comedor_off_laborable:
+      icon: mdi:clock-outline   
+    input_datetime.aa_comedor_on_festivo:
+      icon: mdi:clock-outline   
+    input_datetime.aa_comedor_off_festivo:
+      icon: mdi:clock-outline   
+    automation.aa_comedor_on_laborable:
+      friendly_name: Encendido laborable
+      icon: mdi:calendar-clock
+    automation.aa_comedor_off_laborable:
+      friendly_name: Apagado laborable
+      icon: mdi:calendar-clock
+    automation.aa_comedor_on_festivo:
+      friendly_name: Encendido festivo
+      icon: mdi:calendar-clock
+    automation.aa_comedor_off_festivo:
+      friendly_name: Apagado festivo
+      icon: mdi:calendar-clock
+      
