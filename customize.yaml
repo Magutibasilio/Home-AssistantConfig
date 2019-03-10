@@ -1,0 +1,14 @@
+sensor.dark_sky_visibility:
+  attribution: Dark Sky Visibility
+  friendly_name: Visibilidad
+sensor.dark_sky_pressure:
+  attribution: Dark Sky Pressure
+  friendly_name: Presion
+sensor.dark_sky_daily_summary:
+  attribution: Resumen diario
+sensor.dark_sky_uv_index:
+  attribution: Indice UV
+sensor.dark_sky_precip_intensity:
+  attribution: Intensidad lluvia
+sensor.dark_sky_precip_probability:
+  attribution: Probabilidad lluvia
