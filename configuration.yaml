@@ -1,0 +1,170 @@
+#logger:
+#   default: debug
+
+homeassistant:
+  # Name of the location where Home Assistant is running
+  name: Casa
+  # Location required to calculate the time the sun rises and sets
+  latitude: !secret latitude
+  longitude: !secret longitude
+  # Impacts weather/sunrise data (altitude above sea level in meters)
+  elevation: !secret elevation
+  # metric for Metric, imperial for Imperial
+  unit_system: metric
+  # Pick yours from here: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+  time_zone: Europe/Madrid
+  # Customization file
+  customize: !include config/customize.yaml
+  packages: !include_dir_named packages
+
+
+### Listado dispositivos ###
+alarm_control_panel: !include alarm.yaml
+
+xiaomi_aqara:
+  gateways:
+    - mac: !secret xiaomi_aqara_mac
+      key: !secret xiaomi_aqara_key
+
+tuya:
+  username: !secret smartlife_user
+  password: !secret smartlife_psw
+  country_code: 34
+  platform: smart_life
+
+custom_updater:
+  show_installable: false
+  track:
+    - components
+    - cards
+    - python_scripts
+  card_urls:
+    - https://raw.githubusercontent.com/kuuji/button-card/master/tracker.json
+    - https://raw.githubusercontent.com/nervetattoo/simple-thermostat/master/tracker.json
+    - https://raw.githubusercontent.com/kalkih/mini-media-player/master/tracker.json
+    - https://raw.githubusercontent.com/kalkih/mini-graph-card/master/tracker.json
+    
+system_health:
+
+
+# Show links to resources in log and frontend
+introduction:
+
+
+# Enables the frontend
+frontend:
+  javascript_version: latest
+  themes: !include_dir_merge_named themes/
+
+
+# Enables configuration UI
+config:
+
+
+# Uncomment this if you are using SSL/TLS, running in Docker container, etc.
+http:
+  api_password: !secret ha_password
+  base_url: https://!secret url_ddns:8123
+  ssl_certificate: /home/homeassistant/.homeassistant/www/fullchain.pem
+  ssl_key: /home/homeassistant/.homeassistant/www/privkey.pem
+
+
+# Checks for available updates
+# Note: This component will send some information about your system to
+# the developers to assist with development of Home Assistant.
+# For more information, please see:
+# https://home-assistant.io/blog/2016/10/25/explaining-the-updater/
+updater:
+  # Optional, allows Home Assistant developers to focus on popular components.
+  # include_used_components: true
+
+
+# Discover some devices automatically
+discovery:
+  ignore:
+    - igd
+    
+    
+# Enables support for tracking state changes over time
+history:
+
+
+# View all events in a logbook
+logbook:
+
+
+# Enables a map showing the location of tracked devices
+map:
+
+
+# Track the sun
+sun:
+
+
+# Text to speech
+tts:
+  - platform: google
+    language: 'es'
+    cache: false
+    
+    
+# Cloud
+cloud:
+
+
+# Recorder
+recorder:
+  purge_keep_days: 15
+  exclude:
+    domains:
+      - automation
+      - script
+      - group
+    entities:
+      - sun.sun
+      - sensor.time
+      - sensor.date
+      - sensor.date_template
+      - sensor.last_boot
+      - sensor.server_uptime
+      - sensor.uptime_templated
+      - input_number.days_cleanbackup_emby
+      - input_number.days_cleanbackup_ha
+      - script.backup_clean_emby
+      - script.backup_clean_ha
+      - script.backup_emby
+      - script.backup_emby_update_sensors
+      - script.backup_ha
+      - script.backup_ha_update_sensors
+      - script.update_home_assistant
+      - sensor.last_backup_emby
+      - sensor.last_backup_ha
+      - input_datetime.dishwasher_on
+      - input_datetime.miboxania_off
+      - input_datetime.miboxania_on
+      - input_number.days_cleanbackup_emby
+      - input_number.days_cleanbackup_ha
+      - sensor.illumination_158d00023e3526
+      - sensor.illumination_7c49eb1791e5
+      - sensor.fecha
+      - sensor.hora_recogida_de_datos
+      - sensor.ssl_certificate_expiry
+      - sensor.cpu_speed
+    
+    
+### Aspecto ###
+panel_custom: !include config/panel_custom.yaml
+panel_iframe: !include config/panel_iframe.yaml
+
+lovelace :
+   mode: yaml
+   
+   
+### Subrutinas ###
+shell_command: !include config/shell_command.yaml
+
+
+### API ###
+#api:
+#alexa:
+# smart_home:
