@@ -1,0 +1,307 @@
+title: Aspiradora
+icon: mdi:mdi:robot-vacuum
+cards:
+  - type: custom:vertical-stack-in-card
+    cards:
+    - type: picture-elements
+      #title: Vacuum
+      image: /local/images/vacuum_card.jpg
+      elements:
+        # Botones con Funciones de Vacuum
+        - type: icon
+          icon: mdi:stop
+          tap_action:
+            action: call-service
+            service: vacuum.stop
+            service_data:
+              entity_id: vacuum.clin
+          style:
+           top: 92%
+           left: 7%
+           color: '#00000'
+        - type: icon
+          icon: mdi:play
+          tap_action:
+            action: call-service
+            service: vacuum.start
+            service_data:
+              entity_id: vacuum.clin
+          style:
+           top: 92%
+           left: 20%
+        - type: icon
+          icon: mdi:pause
+          tap_action:
+            action: call-service
+            service: vacuum.pause
+            service_data:
+              entity_id: vacuum.clin
+          style:
+           top: 92%
+           left: 35%
+           color: '#00000'                    
+        - type: icon
+          icon: mdi:home
+          tap_action:
+            action: call-service
+            service: vacuum.return_to_base
+            service_data:
+              entity_id: vacuum.clin
+          style:
+           top: 92%
+           left: 50%
+           color: '#00000'
+        - type: icon
+          icon: mdi:crosshairs
+          tap_action:
+            action: call-service
+            service: vacuum.clean_spot
+            service_data:
+              entity_id: vacuum.clin
+          style:
+           top: 92%
+           left: 65%
+           color: '#00000'  
+        - type: icon
+          icon: mdi:bell-ring
+          tap_action:
+            action: call-service
+            service: vacuum.locate
+            service_data:
+              entity_id: vacuum.clin
+          style:
+           top: 92%
+           left: 80%
+           color: '#00000'  
+        - type: icon
+          icon: mdi:information
+          entity: vacuum.clin
+          style:
+           top: 92%
+           left: 95%
+           color: '#00000'                   
+        # Etiquetas Azules
+        - type: state-label
+          entity: sensor.vacuum_cleaning_time
+          style:
+           top: 6%
+           left: 1%
+           color: rgb(255, 255, 255)
+           transform: translate(0%,-50%)
+           pointer-events: none
+           font-family: Trebuchet MS
+           font-size: 100%
+           font-weight: bold
+           border-color: rgb(34, 154, 210)
+           background-color: '#3090C7'
+           border-radius: 6px
+        - type: state-label
+          entity: sensor.vacuum_cleaned_area
+          style:
+           top: 6%
+           right: 1%
+           color: rgb(255, 255, 255)
+           transform: translate(0%,-50%)
+           pointer-events: none
+           font-family: Trebuchet MS
+           font-size: 100%
+           font-weight: bold
+           border-color: rgb(34, 154, 210)
+           background-color: '#3090C7'
+           border-radius: 6px
+        # Etiqueta Central
+        - type: state-label
+#          tap_action: more-info
+          entity: vacuum.clin
+          style:
+           top: 20%
+           right: 37%
+           color: rgb(255, 255, 255)
+           transform: translate(0%,-50%)
+           font-family: Trebuchet MS
+           font-size: 200%
+           font-weight: bold
+           border-color: rgb(34, 154, 210)
+           border-radius: 6px
+           background-color: '#cccccc'
+        # Etiquetas Lateral Derecho
+        - type: state-label
+          entity: sensor.vacuum_sensors_clean_left
+          style:
+            top: 48%
+            right: 1%
+            color: '#ffffff'
+            transform: translate(0%,-50%)
+            pointer-events: none
+            font-family: Trebuchet MS
+            font-size: 100%
+            font-weight: bold
+            border-right-style: solid
+            border-color: rgb(34, 154, 210)                
+            background-color: "rgba(0, 0, 0, 0.3)"
+            border-radius: 6px
+        - type: state-label
+          entity: sensor.vacuum_main_brush_left
+          style:
+            top: 58%
+            right: 1%
+            color: '#ffffff'
+            transform: translate(0%,-50%)
+            pointer-events: none
+            font-family: Trebuchet MS
+            font-size: 100%
+            font-weight: bold
+            border-right-style: solid
+            border-color: rgb(34, 154, 210)                
+            background-color: "rgba(0, 0, 0, 0.3)"
+            border-radius: 6px
+        - type: state-label
+          entity: sensor.vacuum_side_brush_left 
+          style:
+            top: 68%
+            right: 1%
+            color: '#ffffff'
+            transform: translate(0%,-50%)
+            pointer-events: none
+            font-family: Trebuchet MS
+            font-size: 100%
+            font-weight: bold
+            border-right-style: solid
+            border-color: rgb(34, 154, 210)                
+            background-color: "rgba(0, 0, 0, 0.3)"
+            border-radius: 6px
+        - type: state-label
+          entity: sensor.vacuum_filter_left
+          style:
+            top: 78%
+            right: 1%
+            color: '#ffffff'
+            transform: translate(0%,-50%)
+            pointer-events: none
+            font-family: Trebuchet MS
+            font-size: 100%
+            font-weight: bold
+            border-right-style: solid
+            border-color: rgb(34, 154, 210)                
+            background-color: "rgba(0, 0, 0, 0.3)"
+            border-radius: 6px
+        # Etiquetas Lateral Izquierdo
+        - type: state-label
+          entity: sensor.vacuum_status
+          style:
+            top: 48%
+            left: 1%
+            color: '#ffffff'
+            transform: translate(0%,-50%)
+            pointer-events: none
+            font-family: Trebuchet MS
+            font-size: 100%
+            font-weight: bold
+            border-left-style: solid
+            border-color: rgb(34, 154, 210)                
+            background-color: "rgba(0, 0, 0, 0.3)"
+            border-radius: 6px
+        - type: state-label
+          entity: sensor.vacuum_battery_level
+          style:
+            top: 58%
+            left: 1%
+            color: '#ffffff'
+            transform: translate(0%,-50%)
+            pointer-events: none
+            font-family: Trebuchet MS
+            font-size: 100%
+            font-weight: bold
+            border-left-style: solid
+            border-color: rgb(34, 154, 210)                
+            background-color: "rgba(0, 0, 0, 0.3)"
+            border-radius: 6px
+        - type: state-label
+          entity: sensor.vacuum_fan_speed
+          style:
+            top: 68%
+            left: 1%
+            color: '#ffffff'
+            transform: translate(0%,-50%)
+            pointer-events: none
+            font-family: Trebuchet MS
+            font-size: 100%
+            font-weight: bold
+            border-left-style: solid
+            border-color: rgb(34, 154, 210)                
+            background-color: "rgba(0, 0, 0, 0.3)"
+            border-radius: 6px
+        - type: state-label
+          entity: sensor.vacuum_clean_stop
+          style:
+            top: 78%
+            left: 1%
+            color: '#ffffff'
+            transform: translate(0%,-50%)
+            pointer-events: none
+            font-family: Trebuchet MS
+            font-size: 100%
+            font-weight: bold
+            border-left-style: solid
+            border-color: rgb(34, 154, 210)                
+            background-color: "rgba(0, 0, 0, 0.3)"
+            border-radius: 6px
+
+    - type: entities
+      entities:
+      - type: divider
+      - group.vacuum_auto_on
+      - type: divider
+      - type: custom:time-input-row
+        entity: input_datetime.vacuum_auto_hour
+    - type: horizontal-stack
+      cards:
+      - type: custom:button-card
+        entity: binary_sensor.vacuum_auto_day1
+        action: service
+        service:
+          action: homeassistant.toggle
+          data:
+            entity_id: binary_sensor.vacuum_auto_day1        
+        icon: mdi:alpha-l-box-outline
+      - type: custom:button-card
+        entity: binary_sensor.vacuum_auto_day2
+        icon: mdi:alpha-m-box-outline
+      - type: custom:button-card
+        entity: binary_sensor.vacuum_auto_day3
+        icon: mdi:alpha-x-box-outline
+      - type: custom:button-card
+        entity: binary_sensor.vacuum_auto_day4
+        icon: mdi:alpha-j-box-outline
+      - type: custom:button-card
+        entity: binary_sensor.vacuum_auto_day5
+        icon: mdi:alpha-v-box-outline
+      - type: custom:button-card
+        entity: binary_sensor.vacuum_auto_day6
+        icon: mdi:alpha-s-box-outline
+      - type: custom:button-card
+        entity: binary_sensor.vacuum_auto_day7
+        icon: mdi:alpha-d-box-outline
+    - type: entities
+      title: SEMANA
+      show_header_toggle: false
+      entities:
+        - binary_sensor.vacuum_auto_day1
+        - binary_sensor.vacuum_auto_day2
+        - binary_sensor.vacuum_auto_day3
+        - binary_sensor.vacuum_auto_day4
+        - binary_sensor.vacuum_auto_day5
+        - binary_sensor.vacuum_auto_day6
+        - binary_sensor.vacuum_auto_day7
+
+popup_cards:
+  group.vacuum_auto_on:
+    title: Programacion
+    card:
+      type: entities
+      entities:
+        - group.vacuum_auto_on
+        - type: divider
+        - automation.vacuum_auto_on
+        - type: custom:time-input-row
+          entity: input_datetime.input_datetime

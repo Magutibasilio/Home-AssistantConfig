@@ -1,0 +1,124 @@
+title: Servidor
+icon: mdi:desktop-classic
+cards:
+  - type: gauge
+    unit: días
+    entity: sensor.ssl_certificate_expiry
+    min: 0
+    max: 90
+    severity:
+      green: 60
+      yellow: 30
+      red: 10
+
+  - type: entities
+    title: Home Assistant
+    show_header_toggle: false
+    entities:
+      - sensor.uptime_templated
+      - sensor.current_version
+      - sensor.last_ha_version
+      - script.restart_home_assistant
+#      - script.update_home_assistant
+
+  - type: entities
+    title: Servidor
+    show_header_toggle: false
+    entities:
+      - sensor.time
+      - sensor.date_template
+      - entity: binary_sensor.workday_sensor
+        icon: >-
+          if (state === 'on')
+            return 'mdi:fire';
+          else
+            return mdi:power;
+#          else if (state === 'cool')
+#            return mdi:snowflake;
+#          else if (state === 'dry')
+#            return mdi:water-percent;
+      - sensor.last_boot_templated
+      - sensor.server_uptime
+      - type: divider
+      - sensor.server_current_power
+      - sensor.current_power_cost_server
+      - sensor.day_power_cost_server
+      - type: divider
+      - sensor.processor_use
+      - sensor.cpu_speed
+      - sensor.cpu_temperature
+      - sensor.load_15m
+      - sensor.memory_use_percent
+      - type: divider
+      - sensor.disk_free
+      - sensor.disk_use_percent
+      - sensor.disk_free_mnt_mis_documentos
+      - sensor.disk_use_percent_mnt_mis_documentos
+      - sensor.hd_temperature_dev_sda
+      - sensor.disk_free_mnt_server_media
+      - sensor.disk_use_percent_mnt_server_media
+
+  - type: gauge
+    name: Uso CPU
+    unit: '%'
+    entity: sensor.processor_use
+    severity:
+      green: 0
+      yellow: 45
+      red: 85
+
+  - type: entities
+    title: amule
+    show_header_toggle: false
+    entities:
+      - sensor.process_xfe
+      - sensor.amule_cpu
+      - switch.amule
+
+  - type: entities
+    title: Backup HA
+    show_header_toggle: false
+    entities:
+      - script.backup_ha
+      - sensor.last_backup_ha
+      - sensor.backup_size_total_ha
+      - sensor.backup_count_ha
+      - automation.backup_diario_ha
+      - script.backup_clean_ha
+      - automation.limpieza_diaria_backup_ha
+      - input_number.days_cleanbackup_ha
+
+  - type: entities
+    title: Backup Emby
+    show_header_toggle: false
+    entities:
+      - script.backup_emby
+      - sensor.last_backup_emby
+      - sensor.backup_size_total_emby
+      - sensor.backup_count_emby
+      - automation.backup_diario_emby
+      - script.backup_clean_emby
+      - automation.limpieza_diaria_backup_emby
+      - input_number.days_cleanbackup_emby
+
+  - type: entities
+    title: Network
+    show_header_toggle: false
+    entities:
+      - sensor.speedtest_download
+      - sensor.speedtest_upload
+      - sensor.speedtest_ping
+
+popup_cards:
+  sensor.current_power_cost_server:
+    title: Coste Servidor
+    card:
+      type: entities
+      entities:
+        - sensor.current_power_cost_server
+        - type: divider
+        - sensor.server_cost_hourly
+        - sensor.server_cost_daily
+        - sensor.server_cost_weekly
+        - sensor.server_cost_monthly
+        - sensor.server_cost_yearly

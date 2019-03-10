@@ -1,0 +1,144 @@
+title: Main
+cards:
+  - type: custom:vertical-stack-in-card
+    cards:
+      - type: glance
+        entities:
+          - device_tracker.amazfit_bip_watch
+          - device_tracker.mi_band_2_isset
+          - device_tracker.mi_band_2_ania
+      - type: custom:monster-card
+        show_empty: false
+        card:
+          type: glance
+#      show_state: false
+#      show_header_toggle: false
+        filter:
+          include:
+            - domain: device_tracker
+              state: home
+          exclude:
+            - entity_id: device_tracker.amazfit_bip_watch
+            - entity_id: device_tracker.mi_band_2_isset
+            - entity_id: device_tracker.mi_band_2_ania
+
+  - type: custom:vertical-stack-in-card
+    cards:
+      - type: custom:mini-graph-card
+        entities:
+          - sensor.comedor_temperatura
+        name: Comedor
+        line_color: var(--accent-color)
+        line_width: 8
+        font_size: 75
+        color_thresholds:
+          - value: -10
+            color: "#0000FF"
+          - value: 12
+            color: "#00FF00"
+          - value: 27
+            color: "#FF0000"
+      - type: custom:mini-graph-card
+        entities:
+          - sensor.dormitorio_temperatura
+        name: Dormitorio
+        line_color: var(--accent-color)
+        line_width: 8
+        font_size: 75
+        color_thresholds:
+          - value: -10
+            color: "#0000FF"
+          - value: 12
+            color: "#00FF00"
+          - value: 27
+            color: "#FF0000"
+      - type: custom:mini-graph-card
+        entities:
+          - sensor.ania_temperatura
+        name: Habitación Ania
+        line_color: var(--accent-color)
+        line_width: 8
+        font_size: 75
+        color_thresholds:
+          - value: -10
+            color: "#0000FF"
+          - value: 12
+            color: "#00FF00"
+          - value: 27
+            color: "#FF0000"
+      - type: custom:mini-graph-card
+        entities:
+          - sensor.balcon_temperatura
+        name: Balcón
+        line_color: var(--accent-color)
+        line_width: 8
+        font_size: 75
+        color_thresholds:
+          - value: -10
+            color: "#0000FF"
+          - value: 12
+            color: "#00FF00"
+          - value: 27
+            color: "#FF0000"
+
+  - type: custom:vertical-stack-in-card
+    cards:
+      - type: thermostat
+        entity: climate.aa_comedor
+        name: Comedor
+      - type: entities
+        entities:
+          - type: divider
+          - entity: binary_sensor.comedor_aire_acondicionado 
+            name: Estado
+          - type: divider
+          - input_number.aa_comedor_temp_heat_on
+          - input_number.aa_comedor_temp_heat_auto
+          - type: divider
+          - input_number.aa_comedor_temp_cool_on
+          - input_number.aa_comedor_temp_cool_auto
+          - type: divider
+          - group.aa_comedor_automatismos
+    
+  - type: custom:monster-card
+    show_empty: false
+    card:
+      type: glance
+      title: Baterias a controlar
+    filter:
+      include:
+        - entity_id: sensor.battery*
+          state: < 25
+          
+  - type: entities
+    title: Trayectos
+    show_header_toggle: false
+    entities:
+      - input_select.origin
+      - input_select.destination
+      - sensor.trayecto
+      - sensor.orig_address
+      - sensor.dest_address
+    
+popup_cards:
+  group.aa_comedor_automatismos:
+    title: Programacion
+    card:
+      type: entities
+      entities:
+        - group.aa_comedor_automatismos
+        - type: divider
+        - automation.aa_comedor_on_laborable
+        - type: custom:time-input-row
+          entity: input_datetime.aa_comedor_on_laborable
+        - automation.aa_comedor_off_laborable
+        - type: custom:time-input-row
+          entity: input_datetime.aa_comedor_off_laborable        
+        - type: divider
+        - automation.aa_comedor_on_festivo
+        - type: custom:time-input-row
+          entity: input_datetime.aa_comedor_on_festivo
+        - automation.aa_comedor_off_festivo
+        - type: custom:time-input-row
+          entity: input_datetime.aa_comedor_off_festivo
+

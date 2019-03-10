@@ -1,0 +1,85 @@
+title: Casa
+icon: mdi:home-outline
+cards:
+  - type: entities
+    title: Comedor
+    show_header_toggle: false
+    entities:
+      - sensor.comedor_temperatura
+      - sensor.comedor_humedad
+      - sensor.comedor_presion
+      - sensor.windchill_comedor
+      - sensor.comedor_iluminacion
+      - binary_sensor.comedor_movimiento
+      - switch.comedor_enchufe
+      - light.gateway_luz
+      - binary_sensor.comedor_aire_acondicionado
+      - binary_sensor.comedor_ventana_izq
+      - binary_sensor.comedor_ventana_der
+
+  - type: entities
+    title: Dormitorio
+    show_header_toggle: false
+    entities:
+      - sensor.dormitorio_temperatura
+      - sensor.dormitorio_humedad
+      - sensor.dormitorio_presion
+      - sensor.windchill_dormitorio
+      
+  - type: entities
+    title: Habitacion Ania
+    show_header_toggle: false
+    entities:
+      - sensor.ania_temperatura
+      - sensor.ania_humedad
+      - sensor.ania_presion
+      - sensor.windchill_ania
+
+  - type: entities
+    title: Cocina
+    show_header_toggle: false
+    entities:
+      - sensor.cocina_iluminacion
+      - binary_sensor.cocina_movimiento
+      - switch.cocina_lavavajillas
+      - automation.dishwasher_on
+      - type: custom:time-input-row
+        entity: input_datetime.dishwasher_on
+      - script.dishwasher_auto
+
+  - type: entities
+    title: Despacho
+    show_header_toggle: false
+    entities:
+      - switch.ania_media
+      - automation.miboxania_on
+      - type: custom:time-input-row
+        entity: input_datetime.miboxania_on
+      - automation.miboxania_off
+      - type: custom:time-input-row
+        entity: input_datetime.miboxania_off
+
+  - type: entities
+    title: Entrada
+    show_header_toggle: false
+    entities:
+      - entity: binary_sensor.entrada_puerta
+        secondary_info: last-changed
+      - entity: binary_sensor.entrada_pulsador
+        secondary_info: last-changed
+      - entity: binary_sensor.llavero_jcc
+        secondary_info: last-changed
+      - entity: binary_sensor.llavero_isset
+        secondary_info: last-changed
+      - entity: binary_sensor.llavero_ania
+        secondary_info: last-changed
+      - group.telegram
+
+  - type: entities
+    title: Balcon
+    show_header_toggle: false
+    entities:
+      - sensor.balcon_temperatura
+      - sensor.balcon_humedad
+      - sensor.balcon_presion
+      - sensor.windchill_balcon

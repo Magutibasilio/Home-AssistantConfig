@@ -1,0 +1,135 @@
+title: Meteo
+icon: mdi:cloud-question
+cards:
+  - type: sensor
+    entity: sensor.co2_intensity_es
+    name: Contaminación
+    graph: line
+
+  - type: custom:vertical-stack-in-card
+    cards:
+      - type: entities
+        entities:
+         - sensor.u_s_air_pollution_level
+      - type: custom:mini-graph-card
+        entities:
+          - sensor.u_s_air_quality_index
+        line_color: var(--accent-color)
+        line_width: 8
+        font_size: 75
+        color_thresholds:
+          - value: 0
+            color: "#00ffbf"
+          - value: 51
+            color: "#00ff40"
+          - value: 101
+            color: "#ffbf00"
+          - value: 151
+            color: "#ff8000"
+          - value: 201
+            color: "#ff0000"
+          - value: 301
+            color: "#000000"
+
+  - type: custom:weather-card
+    entity: weather.dark_sky
+    entity_sun: sun.sun
+    icons: "/local/icons/weather_icons/animated/"
+
+  - type: glance
+    entities:
+      - entity: sensor.comedor_temperatura
+        name: Comedor
+      - entity: sensor.dormitorio_temperatura
+        name: Dormitorio
+      - entity: sensor.ania_temperatura
+        name: Ania
+      - entity: sensor.balcon_temperatura
+        name: Balcon
+      
+  - type: entities
+    show_header_toggle: false
+    entities:
+    - entity: sensor.dark_sky_summary
+      name: Resumen
+    - entity: sensor.dark_sky_nearest_storm_distance
+      name: Distancia tormenta más cercana
+    - sensor.dark_sky_nearest_storm_bearing
+    - sensor.storm_dir
+    - entity: sensor.dark_sky_humidity
+      name: Humedad
+    - entity: sensor.dark_sky_temperature
+      name: Temperatura
+    - entity: sensor.dark_sky_apparent_temperature
+      name: Sensación térmica
+    - entity: sensor.dark_sky_wind_speed
+      name: Velocidad del viento
+    - sensor.wind_dir
+    - entity: sensor.dark_sky_precip
+      name: Precipitación
+    - entity: sensor.dark_sky_precip_probability
+      name: Probabilidad lluvia
+    - entity: sensor.dark_sky_precip_intensity
+      name: Intensidad lluvia
+    - entity: sensor.dark_sky_uv_index
+      name: Indice UV
+    - entity: sensor.dark_sky_daily_summary
+      name: Resumen diario
+    - entity: sensor.dark_sky_pressure
+      name: Presion
+    - entity: sensor.dark_sky_visibility
+      name: Visibilidad
+
+  - type: picture-entity
+    entity: camera.meteo_fijo
+    show_name: true
+    show_state: false
+
+  - type: picture-entity
+    entity: camera.meteo_movil
+    show_name: true
+    show_state: false
+
+#  - type: custom:dark-sky-weather-card
+#    title: XXXXXXXXXXXXXXX
+#    entity_sun: sun.sun
+#    entity_daily_summary: sensor.dark_sky_summary
+#    entity_current_conditions: sensor.dark_sky_icon
+#    entity_humidity: sensor.dark_sky_humidity
+#    entity_pressure: sensor.dark_sky_pressure
+#    entity_temperature: sensor.dark_sky_temperature
+#    entity_visibility: sensor.dark_sky_visibility
+#    entity_wind_bearing: sensor.dark_sky_wind_bearing
+#    entity_wind_speed: sensor.dark_sky_wind_speed
+#    entity_forecast_high_temp_1: sensor.dark_sky_daytime_high_temperature_1
+#    entity_forecast_high_temp_2: sensor.dark_sky_daytime_high_temperature_2
+#    entity_forecast_high_temp_3: sensor.dark_sky_daytime_high_temperature_3
+#    entity_forecast_high_temp_4: sensor.dark_sky_daytime_high_temperature_4
+#    entity_forecast_high_temp_5: sensor.dark_sky_daytime_high_temperature_5
+#    entity_forecast_low_temp_1: sensor.dark_sky_overnight_low_temperature_1
+#    entity_forecast_low_temp_2: sensor.dark_sky_overnight_low_temperature_2
+#    entity_forecast_low_temp_3: sensor.dark_sky_overnight_low_temperature_3
+#    entity_forecast_low_temp_4: sensor.dark_sky_overnight_low_temperature_4
+#    entity_forecast_low_temp_5: sensor.dark_sky_overnight_low_temperature_5
+#    entity_forecast_icon_1: sensor.dark_sky_icon_1
+#    entity_forecast_icon_2: sensor.dark_sky_icon_2
+#    entity_forecast_icon_3: sensor.dark_sky_icon_3
+#    entity_forecast_icon_4: sensor.dark_sky_icon_4
+#    entity_forecast_icon_5: sensor.dark_sky_icon_5    
+#    entity_summary_1: sensor.dark_sky_summary_1
+#    entity_summary_2: sensor.dark_sky_summary_2
+#    entity_summary_3: sensor.dark_sky_summary_3
+#    entity_summary_4: sensor.dark_sky_summary_4
+#    entity_summary_5: sensor.dark_sky_summary_5
+#    locale: es
+#    time_format: 24
+#    static_icons: false
+#    sunset: true
+#    tooltips: true
+#    tooltip_bg_color: 'rgb( 75,155,239)'
+#    tooltip_border_color: orange
+#    tooltip_border_width: 3
+#    tooltip_caret_size: 10
+#    tooltip_fg_color: '#fff'
+#    tooltip_left_offset: -5
+#    tooltip_width: 100

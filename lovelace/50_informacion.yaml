@@ -1,0 +1,218 @@
+title: Informacion
+icon: mdi:information
+cards:
+  - type: entities
+    title: Precio Luz
+    show_header_toggle: false
+    entities:
+      - sensor.fecha
+      - sensor.hora_recogida_de_datos
+      - sensor.actual_eur_kwh
+      - sensor.minimo_diario_hora
+      - sensor.minimo_diario_eur_kwh
+      - sensor.maximo_diario_hora
+      - sensor.maximo_diario_eur_kwh
+
+  - type: vertical-stack
+    cards:
+      - type: custom:bignumber-card      
+        entity: sensor.battery_llavero_jcc 
+        title: LLavero JCC
+        scale: 15px
+        min: 0
+        max: 100
+        severity:
+        - value: 20
+          style: 'var(--label-badge-red)'
+        - value: 45
+          style: 'var(--label-badge-yellow)'
+        - value: 100
+          style: 'var(--label-badge-green)'
+
+      - type: custom:bignumber-card      
+        entity: sensor.battery_llavero_isset
+        title: Llavero Isset
+        scale: 15px
+        min: 0
+        max: 100
+        severity:
+        - value: 20
+          style: 'var(--label-badge-red)'
+        - value: 45
+          style: 'var(--label-badge-yellow)'
+        - value: 100
+          style: 'var(--label-badge-green)'
+
+      - type: custom:bignumber-card      
+        entity: sensor.battery_llavero_ania
+        title: LLavero Ania
+        scale: 15px
+        min: 0
+        max: 100
+        severity:
+        - value: 20
+          style: 'var(--label-badge-red)'
+        - value: 45
+          style: 'var(--label-badge-yellow)'
+        - value: 100
+          style: 'var(--label-badge-green)'
+
+      - type: custom:bignumber-card      
+        entity: sensor.battery_entrada_puerta
+        title: Entrada Puerta
+        scale: 15px
+        min: 0
+        max: 100
+        severity:
+        - value: 20
+          style: 'var(--label-badge-red)'
+        - value: 45
+          style: 'var(--label-badge-yellow)'
+        - value: 100
+          style: 'var(--label-badge-green)'
+
+      - type: custom:bignumber-card      
+        entity: sensor.battery_entrada_pulsador
+        title: Entrada Pulsador
+        scale: 15px
+        min: 0
+        max: 100
+        severity:
+        - value: 20
+          style: 'var(--label-badge-red)'
+        - value: 45
+          style: 'var(--label-badge-yellow)'
+        - value: 100
+          style: 'var(--label-badge-green)'
+
+      - type: custom:bignumber-card      
+        entity: sensor.battery_comedor_temperatura
+        title: Comedor Temperatura
+        scale: 15px
+        min: 0
+        max: 100
+        severity:
+        - value: 20
+          style: 'var(--label-badge-red)'
+        - value: 45
+          style: 'var(--label-badge-yellow)'
+        - value: 100
+          style: 'var(--label-badge-green)'
+
+      - type: custom:bignumber-card      
+        entity: sensor.battery_comedor_movimiento
+        title: Comedor Movimiento
+        scale: 15px
+        min: 0
+        max: 100
+        severity:
+        - value: 20
+          style: 'var(--label-badge-red)'
+        - value: 45
+          style: 'var(--label-badge-yellow)'
+        - value: 100
+          style: 'var(--label-badge-green)'
+
+      - type: custom:bignumber-card      
+        entity: sensor.battery_comedor_ventana_izq
+        title: Comedor Ventana Izq
+        scale: 15px
+        min: 0
+        max: 100
+        severity:
+        - value: 20
+          style: 'var(--label-badge-red)'
+        - value: 45
+          style: 'var(--label-badge-yellow)'
+        - value: 100
+          style: 'var(--label-badge-green)'
+
+      - type: custom:bignumber-card      
+        entity: sensor.battery_comedor_ventana_der
+        title: Comedor Ventana Der
+        scale: 15px
+        min: 0
+        max: 100
+        severity:
+        - value: 20
+          style: 'var(--label-badge-red)'
+        - value: 45
+          style: 'var(--label-badge-yellow)'
+        - value: 100
+          style: 'var(--label-badge-green)'
+
+      - type: custom:bignumber-card      
+        entity: sensor.battery_comedor_aa
+        title: Comedor AA
+        scale: 15px
+        min: 0
+        max: 100
+        severity:
+        - value: 20
+          style: 'var(--label-badge-red)'
+        - value: 45
+          style: 'var(--label-badge-yellow)'
+        - value: 100
+          style: 'var(--label-badge-green)'
+
+      - type: custom:bignumber-card      
+        entity: sensor.battery_cocina_movimiento
+        title: Cocina Movimiento
+        scale: 15px
+        min: 0
+        max: 100
+        severity:
+        - value: 20
+          style: 'var(--label-badge-red)'
+        - value: 45
+          style: 'var(--label-badge-yellow)'
+        - value: 100
+          style: 'var(--label-badge-green)'
+
+      - type: custom:bignumber-card      
+        entity: sensor.battery_dormitorio_temperatura
+        title: Dormitorio Temperatura
+        scale: 15px
+        min: 0
+        max: 100
+        severity:
+        - value: 20
+          style: 'var(--label-badge-red)'
+        - value: 45
+          style: 'var(--label-badge-yellow)'
+        - value: 100
+          style: 'var(--label-badge-green)'
+
+      - type: custom:bignumber-card      
+        entity: sensor.battery_ania_temperatura
+        title: Ania Temperatura
+        scale: 15px
+        min: 0
+        max: 100
+        severity:
+        - value: 20
+          style: 'var(--label-badge-red)'
+        - value: 45
+          style: 'var(--label-badge-yellow)'
+        - value: 100
+          style: 'var(--label-badge-green)'
+
+      - type: custom:bignumber-card      
+        entity: sensor.battery_balcon_temperatura
+        title: Balcon Temperatura
+        scale: 15px
+        min: 0
+        max: 100
+        severity:
+        - value: 20
+          style: 'var(--label-badge-red)'
+        - value: 45
+          style: 'var(--label-badge-yellow)'
+        - value: 100
+          style: 'var(--label-badge-green)'
+
+  - type: custom:tracker-card
+    title:
+    trackers:
+      - sensor.custom_card_tracker
+      - sensor.custom_component_tracker
