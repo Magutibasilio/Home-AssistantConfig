@@ -132,30 +132,14 @@ sensor:
 
 # https://community.home-assistant.io/t/templates-extracting-a-list-array-element-from-a-json-output/72634
 # https://github.com/custom-cards/button-card/tree/master/examples
-binary_sensor:
-  - platform: template
-    sensors:
-      vacuum_auto_day1:
-        entity_id: vacuum.clin
-        value_template: 0
-      vacuum_auto_day2:
-        entity_id: vacuum.clin
-        value_template: 0
-      vacuum_auto_day3:
-        entity_id: vacuum.clin
-        value_template: 0
-      vacuum_auto_day4:
-        entity_id: vacuum.clin
-        value_template: 0
-      vacuum_auto_day5:
-        entity_id: vacuum.clin
-        value_template: 0
-      vacuum_auto_day6:
-        entity_id: vacuum.clin
-        value_template: 0
-      vacuum_auto_day7:
-        entity_id: vacuum.clin
-        value_template: 0
+input_boolean:
+  vacuum_auto_day0:
+  vacuum_auto_day1:
+  vacuum_auto_day2:
+  vacuum_auto_day3:
+  vacuum_auto_day4:
+  vacuum_auto_day5:
+  vacuum_auto_day6:
 
 input_datetime:
   vacuum_auto_hour:
@@ -220,75 +204,84 @@ automation:
 ################### esto esta en pruebas es para cuando falle diga el error y lo envie,pero no esta aun ########################
   - alias: vacuum_msg_error
     trigger:
-      - platform: state
-        entity_id: vacuum.clin
-        to: 'error'
-  #    - platform: state
-  #      entity_id: sensor.vacuum_status
-  #      to: 'idle'
-      - platform: state
-        entity_id: vacuum.clin
-        to: 'charger disconnected'
+    - platform: state
+      entity_id: vacuum.clin
+      to: 'error'
+  #  - platform: state
+  #    entity_id: sensor.vacuum_status
+  #    to: 'idle'
+    - platform: state
+      entity_id: vacuum.clin
+      to: 'charger disconnected'
     action:
-      - service: notify.domotica_en_casa
-        data:
-          message: 'Aspiradora con problemas, Error: {{ states.sensor.vacuum_status.state }}.'      
+    - service: notify.domotica_en_casa
+      data:
+        message: 'Aspiradora con problemas, Error: {{ states.sensor.vacuum_status.state }}.'      
 
   - alias: vacuum_auto_on
     trigger:
-    - platform: template
-      value_template: "{{ states('sensor.time') == (states.input_datetime.vacuum_on.attributes.timestamp | int | timestamp_custom('%H:%M', False)) }}"
+      platform: template
+      value_template: "{{ states('sensor.time') == (states.input_datetime.vacuum_auto_hour.attributes.timestamp | int | timestamp_custom('%H:%M', False)) }}"
     condition:
-      condition: time
-      weekday:
-#      {% if is_state('binary_sensor.vacuum_auto_day.day[0]','off') %}
-        - mon
- #     {% endif %}     
+      condition: or
+      conditions:
+        - condition: template
+          value_template: "{{ ( now().weekday() == (0)) and (states.input_boolean.vacuum_auto_day0.state == 'on') }}"
+        - condition: template
+          value_template: "{{ ( now().weekday() == (1)) and (states.input_boolean.vacuum_auto_day1.state == 'on') }}"
+        - condition: template
+          value_template: "{{ ( now().weekday() == (2)) and (states.input_boolean.vacuum_auto_day2.state == 'on') }}"
+        - condition: template
+          value_template: "{{ ( now().weekday() == (3)) and (states.input_boolean.vacuum_auto_day3.state == 'on') }}"
+        - condition: template
+          value_template: "{{ ( now().weekday() == (4)) and (states.input_boolean.vacuum_auto_day4.state == 'on') }}"
+        - condition: template
+          value_template: "{{ ( now().weekday() == (5)) and (states.input_boolean.vacuum_auto_day5.state == 'on') }}"
+        - condition: template
+          value_template: "{{ ( now().weekday() == (6)) and (states.input_boolean.vacuum_auto_day6.state == 'on') }}"
     action:
-    - service: vacuum.start
-      data:
+      - service: vacuum.start
         entity_id: vacuum.clin
-
-#        tue
-#        wed
-#        thu
-#        fri
-#        sat
-#        sun
 
       
 ## Grupo ##
 group:
-  aspiradoracasa:
-    name: Aspiradora
-    view: yes
-    icon: mdi:robot-vacuum-variant
-    entities:
-      - group.aspiradora
+#  aspiradoracasa:
+#    name: Aspiradora
+#    view: yes
+#    icon: mdi:robot-vacuum-variant
+#    entities:
+#      - group.aspiradora
 
   vacuum_auto_on:
-    name: Horarios programados
+    name: Limpieza programada
     icon: mdi:calendar-clock
     entities:
-    - input_datetime.vacuum_auto_hour
+    - input_boolean.vacuum_auto_day0
+    - input_boolean.vacuum_auto_day1
+    - input_boolean.vacuum_auto_day2
+    - input_boolean.vacuum_auto_day3
+    - input_boolean.vacuum_auto_day4
+    - input_boolean.vacuum_auto_day5
+    - input_boolean.vacuum_auto_day6
 
-  aspiradora:
-    name: Aspiradora
-    view: no
-    entities:
-      - vacuum.clin
-      - sensor.vacuum_do_not_disturb
-      - sensor.vacuum_status
-      - sensor.vacuum_cleaned_area
-      - sensor.vacuum_battery_level   
-      - sensor.vacuum_filter_left
-      - sensor.vacuum_main_brush_left
-      - sensor.vacuum_sensors_clean_left
-      - sensor.vacuum_side_brush_left  
-      - sensor.vacuum_cleaning_count
-      - sensor.vacuum_total_cleaned_area
-      - sensor.vacuum_cleaning_time
-      - sensor.vacuum_total_cleaning_time
+#  aspiradora:
+#    name: Aspiradora
+#    view: no
+#    entities:
+#      - vacuum.clin
+#      - sensor.vacuum_do_not_disturb
+#      - sensor.vacuum_status
+#      - sensor.vacuum_cleaned_area
+#      - sensor.vacuum_battery_level   
+#      - sensor.vacuum_filter_left
+#      - sensor.vacuum_main_brush_left
+#      - sensor.vacuum_sensors_clean_left
+#      - sensor.vacuum_side_brush_left  
+#      - sensor.vacuum_cleaning_count
+#      - sensor.vacuum_total_cleaned_area
+#      - sensor.vacuum_cleaning_time
+#      - sensor.vacuum_total_cleaning_time
       
 
 ## Personalizacion ##

@@ -44,14 +44,14 @@ homeassistant:
 
 
 ## Grupo ##
-group:
-  despacho:
-    name: Despacho
-    control: hidden
-    entities:
-    - switch.ania_media
-    - automation.miboxania_on
-    - input_datetime.miboxania_on
-    - automation.miboxania_off
-    - input_datetime.miboxania_off
-    - media_player.mibox_ania
+#group:
+#  despacho:
+#    name: Despacho
+#    control: hidden
+#    entities:
+#    - switch.ania_media
+#    - automation.miboxania_on
+#    - input_datetime.miboxania_on
+#    - automation.miboxania_off
+#    - input_datetime.miboxania_off
+#    - media_player.mibox_ania

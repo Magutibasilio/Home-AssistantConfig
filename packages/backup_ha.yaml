@@ -91,7 +91,7 @@ homeassistant:
       icon: mdi:archive
     sensor.backup_count_ha:
       friendly_name: Total backup
-      icon: mdi:format-list-numbers
+      icon: mdi:format-list-numbered
     automation.backup_diario_ha:
       icon: mdi:calendar-clock
     script.backup_clean_ha:
@@ -107,16 +107,16 @@ homeassistant:
 
 
 ## Grupo ##
-group:
-  backup_ha:
-    name: Backup HA
-    control: hidden
-    entities:
-    - script.backup_ha
-    - sensor.last_backup_ha
-    - sensor.backup_size_total_ha
-    - sensor.backup_count_ha
-    - automation.backup_diario_ha
-    - script.backup_clean_ha
-    - automation.limpieza_diaria_backup_ha
-    - input_number.days_cleanbackup_ha
+#group:
+#  backup_ha:
+#    name: Backup HA
+#    control: hidden
+#    entities:
+#    - script.backup_ha
+#    - sensor.last_backup_ha
+#    - sensor.backup_size_total_ha
+#    - sensor.backup_count_ha
+#    - automation.backup_diario_ha
+#    - script.backup_clean_ha
+#    - automation.limpieza_diaria_backup_ha
+#    - input_number.days_cleanbackup_ha

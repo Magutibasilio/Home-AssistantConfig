@@ -55,7 +55,7 @@ sensor:
     value_template: '{{ value.split()[0] }}'
     unit_of_measurement: '€/kWh'
 
-    
+   
 ## Automatizaciones ##
 automation:
   - alias: Scrape Tarifa Luz
@@ -96,15 +96,15 @@ homeassistant:
 
 
 ## Grupo ##
-group:
-  precioluz:
-    name: Precio Luz
-    control: hidden
-    entities:
-    - sensor.fecha
-    - sensor.hora_recogida_de_datos
-    - sensor.actual_eur_kwh
-    - sensor.minimo_diario_hora
-    - sensor.minimo_diario_eur_kwh
-    - sensor.maximo_diario_hora
-    - sensor.maximo_diario_eur_kwh
+#group:
+#  precioluz:
+#    name: Precio Luz
+#    control: hidden
+#    entities:
+#    - sensor.fecha
+#    - sensor.hora_recogida_de_datos
+#    - sensor.actual_eur_kwh
+#    - sensor.minimo_diario_hora
+#    - sensor.minimo_diario_eur_kwh
+#    - sensor.maximo_diario_hora
+#    - sensor.maximo_diario_eur_kwh

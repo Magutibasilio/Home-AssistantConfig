@@ -14,6 +14,24 @@ sensor:
           {% set weekday = weekdays[now().strftime('%w') | int -1] %}
           {{ weekday }}, {{ as_timestamp(now()) | timestamp_custom("%d/%m/%Y", True) }}
           
+  - platform: template
+    sensors:
+      workday_template:
+#        value_template: '{{states.binary_sensor.workday_sensor.state}}'
+        value_template: >-
+          {% if is_state('binary_sensor.workday_sensor', 'on') %}
+            Si
+          {% else %}
+            No
+          {% endif %}
+        friendly_name: Laborable
+        icon_template: >
+          {% if is_state('binary_sensor.workday_sensor' ,'on') %}
+            mdi:briefcase
+          {% else %}
+            mdi:beach
+          {% endif %}
+
 binary_sensor:
   - platform: workday
     country: ES
@@ -31,9 +49,5 @@ homeassistant:
       friendly_name: Fecha
       icon: mdi:calendar-range
     binary_sensor.workday_sensor:
-      friendly_name_template: >
-        {% if is_state('binary_sensor.workday_sensor', 'on') %}
-          Laborable
-        {% else %}
-          Festivo
-        {% endif %}
+      friendly_name: Laborable
+      icon: mdi:briefcase

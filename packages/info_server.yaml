@@ -55,7 +55,7 @@ sensor:
       - type: disk_free
         arg: /mnt/Server_Media
       - type: process
-        arg: xfe
+        arg: amule
 
   - platform: hddtemp
     disks:
@@ -63,7 +63,7 @@ sensor:
 
   - platform: command_line
     name: amule cpu
-    command: "top -b -n 1 | head -n 50 | grep -i xfe | awk '{print $9}'"
+    command: "top -b -n 1 | head -n 50 | grep -i amule | awk '{print $9}'"
     unit_of_measurement: "%"
 
   - platform: cert_expiry
@@ -80,7 +80,7 @@ sensor:
         unit_of_measurement: '€/H'
 
   - platform: integration
-    name: day_power_cost_server
+    name: server_cost_total
     source: sensor.current_power_cost_server
     round: 5
     unit: €
@@ -103,24 +103,31 @@ utility_meter:
     cycle: yearly
 
 switch:
-  - platform: template
+  - platform: command_line
     switches:
       amule:
-        value_template: "{{ is_state('sensor.process_xfe', 'on') }}"
-        turn_on:
-          service: shell_command.amule_on
-        turn_off:
-          service: shell_command.amule_off
+        command_on: 'ssh -AX home-server@localhost amule'
+        command_off: 'ssh home-server@localhost pkill amule'
+
+
+#  - platform: template
+#    switches:
+#      amule:
+#        value_template: "{{ is_state('sensor.process_amule', 'on') }}"
+#        turn_on:
+#          service: shell_command.amule_on
+#        turn_off:
+#          service: shell_command.amule_off
           
 
 ## Comandos  ##
-shell_command:
-  amule_on: /home/homeassistant/.homeassistant/scripts/amule_on.sh
-  amule_off: /home/homeassistant/.homeassistant/scripts/amule_off.sh
+#shell_command:
+#  amule_on: ssh -AX home-server@localhost amule
+#  amule_off: ssh home-server@localhost pkill amule
 
 
 ## Automatizaciones ##
-automation:
+#automation:
 #  - alias: gateway_error
 ##    initial state: true
 #    trigger:
@@ -190,8 +197,8 @@ homeassistant:
       icon: mdi:memory
     sensor.ssl_certificate_expiry:
       friendly_name: Caducidad SSL
-    sensor.day_power_cost_server:
-      friendly_name: Gasto acumulado (Día)
+    sensor.server_cost_total:
+      friendly_name: Gasto acumulado (Total)
       icon: mdi:currency-eur
     sensor.server_cost_hourly:
       friendly_name: Gasto acumulado (Hora)
@@ -216,31 +223,31 @@ homeassistant:
 
 
 ## Grupo ##
-group:
-  info_server:
-    name: Servidor
-    entities:
-    - sensor.time
-    - sensor.date_template
-    - sensor.server_current_power
-    - sensor.last_boot_templated
-    - sensor.server_uptime
-    - sensor.processor_use
-    - sensor.cpu_speed
-    - sensor.cpu_temperature
-    - sensor.load_15m
-    - sensor.memory_use_percent
-    - sensor.disk_free
-    - sensor.disk_use_percent
-    - sensor.disk_free_mnt_mis_documentos
-    - sensor.disk_use_percent_mnt_mis_documentos
-    - sensor.hd_temperature_dev_sda
-    - sensor.disk_free_mnt_server_media
-    - sensor.disk_use_percent_mnt_server_media
+#group:
+#  info_server:
+#    name: Servidor
+#    entities:
+#    - sensor.time
+#    - sensor.date_template
+#    - sensor.server_current_power
+#    - sensor.last_boot_templated
+#    - sensor.server_uptime
+#    - sensor.processor_use
+#    - sensor.cpu_speed
+#    - sensor.cpu_temperature
+#    - sensor.load_15m
+#    - sensor.memory_use_percent
+#    - sensor.disk_free
+#    - sensor.disk_use_percent
+#    - sensor.disk_free_mnt_mis_documentos
+#    - sensor.disk_use_percent_mnt_mis_documentos
+#    - sensor.hd_temperature_dev_sda
+#    - sensor.disk_free_mnt_server_media
+#    - sensor.disk_use_percent_mnt_server_media
     
-  info_amule:
-    name: amule
-    entities:
-    - sensor.process_xfe
-    - sensor.amule_cpu
-    - switch.amule
+#  info_amule:
+#    name: amule
+#    entities:
+#    - sensor.process_amule
+#    - sensor.amule_cpu
+#    - switch.amule#

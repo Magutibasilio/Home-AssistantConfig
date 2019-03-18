@@ -189,28 +189,27 @@ homeassistant:
     automation.weather_msg_storm:
       friendly_name: Tormenta cercana
       
-
  
 ## Grupo ##
-group:
-  meteo:
-    control: hidden
-    entities:
-    - sensor.dark_sky_summary
-    - sensor.dark_sky_nearest_storm_distance
-    - sensor.dark_sky_nearest_storm_bearing
-    - sensor.storm_dir
-    - sensor.dark_sky_humidity
-    - sensor.dark_sky_temperature
-    - sensor.dark_sky_apparent_temperature
-    - sensor.dark_sky_wind_speed
-    - sensor.dark_sky_wind_bearing
-    - sensor.wind_dir
-    - sensor.dark_sky_precip
-    - sensor.dark_sky_precip_probability
-    - sensor.dark_sky_precip_intensity
-    - sensor.dark_sky_uv_index
-    - sensor.dark_sky_daily_summary
-    - sensor.dark_sky_pressure
-    - sensor.dark_sky_visibility
+#group:
+#  meteo:
+#    control: hidden
+#    entities:
+#    - sensor.dark_sky_summary
+#    - sensor.dark_sky_nearest_storm_distance
+#    - sensor.dark_sky_nearest_storm_bearing
+#    - sensor.storm_dir
+#    - sensor.dark_sky_humidity
+#    - sensor.dark_sky_temperature
+#    - sensor.dark_sky_apparent_temperature
+#    - sensor.dark_sky_wind_speed
+#    - sensor.dark_sky_wind_bearing
+#    - sensor.wind_dir
+#    - sensor.dark_sky_precip
+#    - sensor.dark_sky_precip_probability
+#    - sensor.dark_sky_precip_intensity
+#    - sensor.dark_sky_uv_index
+#    - sensor.dark_sky_daily_summary
+#    - sensor.dark_sky_pressure
+#    - sensor.dark_sky_visibility
     

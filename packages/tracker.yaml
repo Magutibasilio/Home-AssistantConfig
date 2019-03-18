@@ -9,9 +9,9 @@ device_tracker:
       - 'tv_samsung_led46'
       - 'ulefone_s7'
       - 'mibox_ania'
-      - 'ble_3c_bd_'
-      - 'ble_68_a8_'
-      - 'ble_58_d8_'
+      - 'ble_3c_bd_3e_c1_34_e9'
+      - 'ble_68_a8_a8_54_33_6b'
+      - 'ble_58_d8_d8_4b_c5_23'
       - 'mibcs'
 #    hci_device: 'hci0'
 #    hide_unnamed: true
@@ -48,26 +48,26 @@ sensor:
        orig_address:
          value_template: >-
             {%- if is_state("input_select.origin", "Casa")  -%}
-              calle casa, nn, CP Barcelona, España
+              Carrer de Cantabria, 44, 08020 Barcelona, Spain
             {%- elif is_state("input_select.origin", "Trabajo")  -%}
-              calle trabajo, nn, CP Barcelona, España
+              Plaza de Julio Gonzalez, 6, 08005 Barcelona, Spain
             {%- elif is_state("input_select.origin", "Colegio")  -%}
-              calle colegio, nn, 08018 Barcelona, España
+              Rambla de Guipuscoa, 19, 08018 Barcelona, Spain
             {%- else -%}
-              Madrid, España
+              Madrid, Spain
             {%- endif %}
   - platform: template
     sensors:
        dest_address:
          value_template: >-
             {%- if is_state("input_select.destination", "Casa")  -%}
-              calle casa, nn, CP Barcelona, España
+              Carrer de Cantabria, 44, 08020 Barcelona, Spain
             {%- elif is_state("input_select.destination", "Trabajo")  -%}
-              calle trabajo, nn, CP Barcelona, España
+              Plaza de Julio Gonzalez, 6, 08005 Barcelona, Spain
             {%- elif is_state("input_select.destination", "Colegio")  -%}
-              calle colegio, nn, 08018 Barcelona, España
+              Rambla de Guipuscoa, 19, 08018 Barcelona, Spain
             {%- else -%}
-              Sevilla, España
+              Sevilla, Spain
             {%- endif %}
 
   - platform: waze_travel_time
@@ -80,3 +80,12 @@ sensor:
 # https://community.home-assistant.io/t/solved-error-setting-up-platform-bluetooth-le-tracker/83187
 # https://github.com/home-assistant/home-assistant/issues/16698
 # https://community.home-assistant.io/t/ble-custom-component/48355/13
+
+# home-server@home-server:~$ hcitool lescan
+# LE Scan ...
+# D8:CC:EE:1C:FA:0E     Amazfit Bip Watch
+# DA:14:DA:5C:12:AA     MI Band 2 Isset
+# D0:DA:C9:67:CC:2A     MI Band 2 Ania
+# F5:01:E5:C6:9E:23     Amazfit Cor Alejandra
+# F9:DE:B8:FC:B6:56     MI Band 2 Juan Rubio
+# ED:66:9A:F0:FD:7A MI Band 2 ????

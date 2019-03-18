@@ -7,7 +7,7 @@
 switch:
   - platform: broadlink
     host: 192.168.3.202
-    mac: '34:EA:xx:xx'
+    mac: !secret broadlink_comedor_mac
 
 climate:
   - platform: smartir
@@ -16,8 +16,12 @@ climate:
     controller_send_service: switch.broadlink_send_packet_192_168_3_202
     temperature_sensor: sensor.comedor_temperatura
     humidity_sensor: sensor.comedor_humedad
+    power_sensor: binary_sensor.comedor_aire_acondicionado
 
-    
+smartir:
+  update_branch: rc
+
+  
 ## Sensores ##
 input_number:
   aa_comedor_temp_heat_on:
@@ -134,41 +138,6 @@ automation:
           {%- else -%}
             script.aa_comedor_auto
           {% endif %}
-#          {% elif (states('sensor.comedor_temperatura')| int < states('input_number.aa_comedor_temp_heat_on')|int) or (states('sensor.comedor_temperatura')| int > states('input_number.aa_comedor_temp_cool_on')|int) %}
-
-  - alias: aa_comedor_close
-    hide_entity: True
-    trigger:
-      platform: state
-      entity_id: binary_sensor.comedor_aire_acondicionado
-      to: 'closed'
-    action:
-      - service: python_script.set_state
-        data_template:
-          entity_id: climate.aa_comedor
-          state: off
- #         icon: mdi:power
-  - alias: aa_comedor_open
-    hide_entity: True
-    trigger:
-      platform: state
-      entity_id: binary_sensor.comedor_aire_acondicionado
-      to: 'open'
-    action:
-      - service: python_script.set_state
-        data_template:
-          entity_id: climate.aa_comedor
-          state: heat
-#          icon: mdi:fire
-#          icon: mdi:snowflake
-
-#curl -X POST -H "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI4NGIwMTYwM2RkYmE0OWYzOWQyMTg4ODY0MTU2NTMxNSIsImlhdCI6MTU0ODcxMjgzNiwiZXhwIjoxODY0MDcyODM2fQ.SNHnTpICg6TFVJ1hQZME1ijWkj-MBIjeXC3noreVpHI" \
-#       -H "Content-Type: application/json" \
-#       -d '{"state": "off"}' \
-#       https://192.168.3.10:8123/api/states/climate.aa_comedor
-#	   
-#curl -X POST -H "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI4NGIwMTYwM2RkYmE0OWYzOWQyMTg4ODY0MTU2NTMxNSIsImlhdCI6MTU0ODcxMjgzNiwiZXhwIjoxODY0MDcyODM2fQ.SNHnTpICg6TFVJ1hQZME1ijWkj-MBIjeXC3noreVpHI" -H "Content-Type: application/json" -d '{"state": "off"}' https://192.168.3.10:8123/api/states/climate.aa_comedor -k
-
 
   - alias: aa_comedor_on_laborable
     trigger:
@@ -227,34 +196,6 @@ group:
 ## Personalizacion ##
 homeassistant:
   customize:
-    binary_sensor.comedor_aire_acondicionado:
-      friendly_name: Comedor - Aire acondicionado
-      icon_template: >-
-        {% if is_state('climate.aa_comedor', 'heat') %}
-          mdi:fire
-        {% elif is_state('climate.aa_comedor', 'cool') %}
-          mdi:snowflake
-        {% elif is_state('climate.aa_comedor', 'dry') %}
-          mdi:water-percent
-        {% else %}
-          mdi:power
-        {% endif %}    
-      icon_color: >-
-        {% if is_state('climate.aa_comedor', 'heat') %}
-          red
-        {% elif is_state('climate.aa_comedor', 'cool') %}
-          blue
-        {% endif %}    
-      state_template: >-
-        {% if is_state('climate.aa_comedor', 'heat') %}
-          Calor
-        {% elif is_state('climate.aa_comedor', 'cool') %}
-          Frio
-        {% elif is_state('climate.aa_comedor', 'dry') %}
-          Deshumidificador
-        {% else %}
-          Apagado
-        {% endif %}    
     input_number.aa_comedor_temp_heat_on:
       friendly_name: Calor ON
     input_number.aa_comedor_temp_cool_on:

@@ -9,10 +9,10 @@ automation:
         entity_id: 'switch.comedor_enchufe'
         state: 'off'
     action:
-      - service: notify.administrador
-        data:
-          message: "Alarma desactivada por JCC"
-      - delay: '00:00:10'
+    - service: notify.administrador
+      data:
+        message: "Alarma desactivada por JCC"
+    - delay: '00:00:10'
 
   - alias: Alarma apagada - Isset
     trigger:
@@ -55,11 +55,11 @@ homeassistant:
 
 
 ## Grupo ##
-group:
-  telegram:
-    name: Telegram
-    entities:
-    - automation.alarma_apagada_jcc
-    - automation.alarma_apagada_isset
-    - automation.alarma_apagada_ania
+#group:
+#  telegram:
+#    name: Telegram
+#    entities:
+#    - automation.alarma_apagada_jcc
+#    - automation.alarma_apagada_isset
+#    - automation.alarma_apagada_ania
 

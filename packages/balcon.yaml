@@ -18,10 +18,10 @@ homeassistant:
 
 
 ## Grupo ##
-group:
-  balcon:
-    name: Balcón
-    entities:
-    - sensor.balcon_temperatura
-    - sensor.balcon_humedad
-    - sensor.balcon_presion
+#group:
+#  balcon:
+#    name: Balcón
+#    entities:
+#    - sensor.balcon_temperatura
+#    - sensor.balcon_humedad
+#    - sensor.balcon_presion

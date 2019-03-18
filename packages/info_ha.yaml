@@ -31,18 +31,19 @@ script:
     sequence:
       - service: homeassistant.restart
         
-  update_home_assistant:
-    alias: Update Home Assistant
-    sequence:
-      - service: shell_command.update_ha
-#      - service: homeassistant.restart
+#  update_home_assistant:
+#    alias: Update Home Assistant
+#    sequence:
+#      - service: shell_command.update_ha
+##      - service: homeassistant.restart
 
  
 ## Comandos  ##
-shell_command:
-  update_ha: echo {{ !secret sudo_psw_ha }} | sudo -S /home/homeassistant/.homeassistant/scripts/update_ha.sh
+#shell_command:
+#  update_ha: echo {{ !secret sudo_psw_ha }} | sudo -S /home/homeassistant/.homeassistant/scripts/update_ha.sh
 #  update_ha: ssh /home/homeassistant/.homeassistant/scripts/update_ha.sh'
 #  update_ha: ssh homeassistant@192.168.3.10 sudo bash /home/homeassistant/.homeassistant/scripts/update_ha.sh
+#  update_ha: echo "dunkelHA" | sudo -S /home/homeassistant/.homeassistant/scripts/update_ha.sh
 #  update_ha: echo {{ !secret sudo_psw_ha }} | sudo -S /home/homeassistant/.homeassistant/scripts/update_ha.sh
 
 
@@ -77,13 +78,13 @@ homeassistant:
 
  
 ## Grupo ##
-group:
-  info_HA:
-    name: Home Assistant
-    control: hidden
-    entities:
-    - sensor.uptime_templated
-    - sensor.current_version
-    - sensor.last_ha_version
-    - script.restart_home_assistant
-    - script.update_home_assistant
+#group:
+#  info_HA:
+#    name: Home Assistant
+#    control: hidden
+#    entities:
+#    - sensor.uptime_templated
+#    - sensor.current_version
+#    - sensor.last_ha_version
+#    - script.restart_home_assistant
+#    - script.update_home_assistant

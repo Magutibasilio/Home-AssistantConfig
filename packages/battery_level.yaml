@@ -191,22 +191,22 @@ sensor:
 
  
 ## Grupo ##
-group:
-  batteries:
-    name: Baterias
-    control: hidden
-    entities:
-    - sensor.battery_llavero_jcc
-    - sensor.battery_llavero_isset
-    - sensor.battery_llavero_ania
-    - sensor.battery_entrada_puerta
-    - sensor.battery_entrada_pulsador
-    - sensor.battery_comedor_temperatura
-    - sensor.battery_comedor_movimiento
-    - sensor.battery_comedor_ventana_izq
-    - sensor.battery_comedor_ventana_der
-    - sensor.battery_comedor_aa
-    - sensor.battery_cocina_movimiento
-    - sensor.battery_dormitorio_temperatura
-    - sensor.battery_ania_temperatura
-    - sensor.battery_balcon_temperatura
+#group:
+#  batteries:
+#    name: Baterias
+#    control: hidden
+#    entities:
+#    - sensor.battery_llavero_jcc
+#    - sensor.battery_llavero_isset
+#    - sensor.battery_llavero_ania
+#    - sensor.battery_entrada_puerta
+#    - sensor.battery_entrada_pulsador
+#    - sensor.battery_comedor_temperatura
+#    - sensor.battery_comedor_movimiento
+#    - sensor.battery_comedor_ventana_izq
+#    - sensor.battery_comedor_ventana_der
+#    - sensor.battery_comedor_aa
+#    - sensor.battery_cocina_movimiento
+#    - sensor.battery_dormitorio_temperatura
+#    - sensor.battery_ania_temperatura
+#    - sensor.battery_balcon_temperatura

@@ -91,7 +91,7 @@ homeassistant:
       icon: mdi:archive
     sensor.backup_count_emby:
       friendly_name: Total backup
-      icon: mdi:format-list-numbers
+      icon: mdi:format-list-numbered
     automation.backup_diario_emby:
       icon: mdi:calendar-clock
     script.backup_clean_emby:
@@ -107,16 +107,16 @@ homeassistant:
       
       
 ## Grupo ##
-group:
-  backup_emby:
-    name: Backup Emby
-    control: hidden
-    entities:
-    - script.backup_emby
-    - sensor.last_backup_emby
-    - sensor.backup_size_total_emby
-    - sensor.backup_count_emby
-    - automation.backup_diario_emby
-    - script.backup_clean_emby
-    - automation.limpieza_diaria_backup_emby
-    - input_number.days_cleanbackup_emby
+#group:
+#  backup_emby:
+#    name: Backup Emby
+#    control: hidden
+#    entities:
+#    - script.backup_emby
+#    - sensor.last_backup_emby
+#    - sensor.backup_size_total_emby
+#    - sensor.backup_count_emby
+#    - automation.backup_diario_emby
+#    - script.backup_clean_emby
+#    - automation.limpieza_diaria_backup_emby
+#    - input_number.days_cleanbackup_emby

@@ -18,10 +18,10 @@ homeassistant:
 
 
 ## Grupo ##
-group:
-  habitacion_ania:
-    name: Habitación Ania
-    entities:
-    - sensor.ania_temperatura
-    - sensor.ania_humedad
-    - sensor.ania_presion
+#group:
+#  habitacion_ania:
+#    name: Habitación Ania
+#    entities:
+#    - sensor.ania_temperatura
+#    - sensor.ania_humedad
+#    - sensor.ania_presion

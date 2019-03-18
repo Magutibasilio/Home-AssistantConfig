@@ -49,15 +49,14 @@ homeassistant:
 
 
 ## Grupo ##
-group:
-  cocina:
-    name: Cocina
-    control: hidden
-    entities:
-    - sensor.cocina_iluminacion
-    - binary_sensor.cocina_movimiento
-    - switch.cocina_lavavajillas
-    - automation.dishwasher_on
-    - input_datetime.dishwasher_on
-    - script.dishwasher_auto
- 
+#group:
+#  cocina:
+#    name: Cocina
+#    control: hidden
+#    entities:
+#    - sensor.cocina_iluminacion
+#    - binary_sensor.cocina_movimiento
+#    - switch.cocina_lavavajillas
+#    - automation.dishwasher_on
+#    - input_datetime.dishwasher_on
+#    - script.dishwasher_auto

@@ -18,10 +18,10 @@ homeassistant:
 
 
 ## Grupo ##
-group:
-  dormitorio:
-    name: Dormitorio
-    entities:
-    - sensor.dormitorio_temperatura
-    - sensor.dormitorio_humedad
-    - sensor.dormitorio_presion
+#group:
+#  dormitorio:
+#    name: Dormitorio
+#    entities:
+#    - sensor.dormitorio_temperatura
+#    - sensor.dormitorio_humedad
+#    - sensor.dormitorio_presion

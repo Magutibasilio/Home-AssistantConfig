@@ -12,7 +12,7 @@ sensor:
 
 ## Automatizaciones ##
 automation:
-  - alias: comedor_quitamiedos
+  - alias: comedor_luzpaso
     initial_state: true
     trigger:
       - platform: state
@@ -57,19 +57,19 @@ homeassistant:
 
 
 ## Grupo ##
-group:
-  comedor:
-    name: Comedor
-    control: hidden
-    entities:
-    - sensor.comedor_temperatura
-    - sensor.comedor_humedad
-    - sensor.comedor_presion
-    - sensor.comedor_iluminacion
-    - binary_sensor.comedor_movimiento
-    - switch.comedor_enchufe
-    - switch.servidor_medidor
-    - light.gateway_luz
-    - binary_sensor.comedor_aire_acondicionado
-    - binary_sensor.comedor_ventana_izq
-    - binary_sensor.comedor_ventana_der
+#group:
+#  comedor:
+#    name: Comedor
+#    control: hidden
+#    entities:
+#    - sensor.comedor_temperatura
+#    - sensor.comedor_humedad
+#    - sensor.comedor_presion
+#    - sensor.comedor_iluminacion
+#    - binary_sensor.comedor_movimiento
+#    - switch.comedor_enchufe
+#    - switch.servidor_medidor
+#    - light.gateway_luz
+#    - binary_sensor.comedor_aire_acondicionado
+#    - binary_sensor.comedor_ventana_izq
+#    - binary_sensor.comedor_ventana_der
