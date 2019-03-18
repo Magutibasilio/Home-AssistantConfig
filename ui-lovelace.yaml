@@ -1,59 +1,64 @@
 title: Home-Server
 
-# https://community.home-assistant.io/t/my-lovelace-plugins/70726
 resources:
-  - url: /local/custom_ui/dual-gauge-card.js
+  - url: /local/custom_ui/auto-entities.js
     type: js
-  - url: /local/custom_ui/monster-card.js
+  - url: /local/custom_ui/bar-card.js
     type: js
   - url: /local/custom_ui/bignumber-card.js
     type: js
-  - url: /local/custom_ui/weather-card.js
-    type: module 
-  - url: /local/custom_ui/card-tools.js?track=true  
-    type: js
-  - url: /local/custom_ui/secondaryinfo-entity-row.js
+  - url: /local/custom_ui/button-card.js
     type: module
-  - url: /local/tracker-card.js
-    type: js
-  - url: /local/custom_ui/dark-sky-weather-card.js
+  - url: /local/custom_ui/canvas-gauge-card.js
     type: module
   - url: /local/custom_ui/card-modder.js
     type: js
-  - url: /local/custom_ui/slider-entity-row.js
+  - url: /local/custom_ui/card-tools.js?track=true  
     type: js
-  - url: /local/custom_ui/auto-entities.js
+  - url: /local/custom_ui/dark-sky-weather-card.js
+    type: module
+  - url: /local/custom_ui/dual-gauge-card.js
     type: js
   - url: /local/custom_ui/fold-entity-row.js
     type: js
-  - url: /local/custom_ui/layout-card.js
+  - url: /local/custom_ui/forked-daapd-card.js
     type: js
-  - url: /local/custom_ui/popup-card.js?track=true
-    type: js
-  - url: /local/custom_ui/time-input-row.js
-    type: js
-  - url: /local/custom_ui/state-switch.js
-    type: js
-  - url: /local/custom_ui/vertical-stack-in-card.js
-    type: js
-  - url: /local/custom_ui/canvas-gauge-card.js
-    type: module
-  - url: /local/custom_ui/button-card.js
-    type: module
   - url: /local/custom_ui/haiku-global-config.js
     type: module
   - url: /local/custom_ui/haiku-room-card.js
     type: module
-  - url: /local/custom_ui/surveillance-card.js
-    type: module    
-  - url: /local/custom_ui/simple-thermostat.js
-    type: module    
-  - url: /local/custom_ui/toggle-lock-entity-row.js
+  - url: /local/custom_ui/layout-card.js
     type: js
-  - url: /local/custom_ui/mini-media-player-bundle.js
-    type: module
   - url: /local/custom_ui/mini-graph-card-bundle.js
     type: module
+  - url: /local/custom_ui/mini-media-player-bundle.js
+    type: module
+  - url: /local/custom_ui/monster-card.js
+    type: js
+  - url: /local/custom_ui/popup-card.js?track=true
+    type: js
+  - url: /local/custom_ui/secondaryinfo-entity-row.js
+    type: module
+  - url: /local/custom_ui/simple-thermostat.js
+    type: module    
+  - url: /local/custom_ui/slider-entity-row.js
+    type: js
+  - url: /local/custom_ui/state-switch.js
+    type: js
+  - url: /local/custom_ui/surveillance-card.js
+    type: module    
+  - url: /local/custom_ui/swipe-card.js
+    type: module    
+  - url: /local/custom_ui/time-input-row.js
+    type: js
+  - url: /local/custom_ui/toggle-lock-entity-row.js
+    type: js
+  - url: /local/custom_ui/vertical-stack-in-card.js
+    type: js
+  - url: /local/custom_ui/weather-card.js
+    type: module 
+  - url: /local/tracker-card.js
+    type: js
     
 views:
   - !include lovelace/00_main.yaml
@@ -64,6 +69,7 @@ views:
   - !include lovelace/30_media.yaml
   - !include lovelace/40_meteo.yaml
   - !include lovelace/50_informacion.yaml
+  - !include lovelace/99_hidden.yaml
 
 excluded_entities:
 # grupos
@@ -156,59 +162,3 @@ excluded_entities:
   - script.update_home_assistant
   - switch.servidor_medidor
   - switch.plug_158d000245d060
-
-
-
-## SCRIPT TEMPLATE ###
-#{%- macro plural(name) -%}
-#{%- if name[(name|length|int -1):] == "y" -%}
-#{{- name[:-1] -}}ies
-#{%- else -%}
-#{{- name -}}s
-#{%- endif -%}
-#{%- endmacro -%}
-#title: My Lovely Home Automation
-#views:
-#- title: Home
-#cards:
-#{%- set domains = states | map(attribute='domain') |list | unique | list %}
-#{%- for item in states['camera'] %}
-#- id: {{ item.entity_id.replace('.', '_') }}
-#type: picture-entity 
-#title: {{ item.name }}
-#entity: {{ item.entity_id }}
-#camera_image: {{ item.entity_id }}
-#show_info: true
-#tap_action: dialog
-#{% endfor %}
-#{%- for item in states['media_player'] %}
-#- type: media-control
-#entity: {{ item.entity_id }}
-#{% endfor %}
-#{%- for item in domains if item != "camera" and item != "media_player" %}
-#- type: {% if item == "device_tracker" -%}
-#entity-filter
-#{%- elif item == "camera" -%}
-#picture-entity
-#{%- else -%}
-#entities
-#{%- endif %}
-#{%- if states[item]|list |length|default(0)|int > 1 %}
-#title: {{ plural(item.replace('_', ' ') | title) }}
-#{%- else %}
-#title: {{ item.replace('_', ' ') | title }}
-#{%- endif %}
-#show_header_toggle: true
-#entities:
-#{%- for e in states[item] %}
-#- {{ e.entity_id }}
-#{%- endfor %}
-#{%- if item == "device_tracker" %}
-#state_filter:
-#- 'home'
-#card:
-#type: glance
-#title: My Device Trackers
-#{% endif %}
-#{% endfor -%}
-
