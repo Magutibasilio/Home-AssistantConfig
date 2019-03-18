@@ -73,7 +73,7 @@ cards:
         secondary_info: last-changed
       - entity: binary_sensor.llavero_ania
         secondary_info: last-changed
-      - group.telegram
+#      - group.telegram
 
   - type: entities
     title: Balcon

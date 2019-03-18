@@ -89,9 +89,6 @@ cards:
       - type: entities
         entities:
           - type: divider
-          - entity: binary_sensor.comedor_aire_acondicionado 
-            name: Estado
-          - type: divider
           - input_number.aa_comedor_temp_heat_on
           - input_number.aa_comedor_temp_heat_auto
           - type: divider
@@ -117,8 +114,6 @@ cards:
       - input_select.origin
       - input_select.destination
       - sensor.trayecto
-      - sensor.orig_address
-      - sensor.dest_address
     
 popup_cards:
   group.aa_comedor_automatismos:
@@ -126,8 +121,6 @@ popup_cards:
     card:
       type: entities
       entities:
-        - group.aa_comedor_automatismos
-        - type: divider
         - automation.aa_comedor_on_laborable
         - type: custom:time-input-row
           entity: input_datetime.aa_comedor_on_laborable

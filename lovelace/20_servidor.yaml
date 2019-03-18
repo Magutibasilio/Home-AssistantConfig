@@ -27,22 +27,13 @@ cards:
     entities:
       - sensor.time
       - sensor.date_template
-      - entity: binary_sensor.workday_sensor
-        icon: >-
-          if (state === 'on')
-            return 'mdi:fire';
-          else
-            return mdi:power;
-#          else if (state === 'cool')
-#            return mdi:snowflake;
-#          else if (state === 'dry')
-#            return mdi:water-percent;
+#      - entity: binary_sensor.workday_sensor
+      - sensor.workday_template
       - sensor.last_boot_templated
       - sensor.server_uptime
       - type: divider
       - sensor.server_current_power
       - sensor.current_power_cost_server
-      - sensor.day_power_cost_server
       - type: divider
       - sensor.processor_use
       - sensor.cpu_speed
@@ -57,6 +48,50 @@ cards:
       - sensor.hd_temperature_dev_sda
       - sensor.disk_free_mnt_server_media
       - sensor.disk_use_percent_mnt_server_media
+  - type: horizontal-stack
+    cards:      
+      - type: vertical-stack
+        cards:
+          - type: gauge
+            unit: '%'
+            entity: sensor.disk_use_percent
+            min: 0
+            max: 100
+            severity:
+              green: 25
+              yellow: 50
+              red: 75
+          - type: markdown
+            content: >
+              64Gb
+      - type: custom:vertical-stack-in-card
+        cards:
+          - type: gauge
+            unit: '%'
+            entity: sensor.disk_use_percent_mnt_mis_documentos
+            min: 0
+            max: 100
+            severity:
+              green: 25
+              yellow: 50
+              red: 75
+          - type: markdown
+            content: >
+              ## 512Gb
+      - type: custom:vertical-stack-in-card
+        cards:
+          - type: gauge
+            unit: '%'
+            entity: sensor.disk_use_percent_mnt_server_media
+            min: 0
+            max: 100
+            severity:
+              green: 25
+              yellow: 50
+              red: 75
+          - type: markdown
+            content: >
+              ## 1024Gb
 
   - type: gauge
     name: Uso CPU
@@ -71,7 +106,7 @@ cards:
     title: amule
     show_header_toggle: false
     entities:
-      - sensor.process_xfe
+      - sensor.process_amule
       - sensor.amule_cpu
       - switch.amule
 
@@ -115,10 +150,10 @@ popup_cards:
     card:
       type: entities
       entities:
-        - sensor.current_power_cost_server
-        - type: divider
         - sensor.server_cost_hourly
         - sensor.server_cost_daily
         - sensor.server_cost_weekly
         - sensor.server_cost_monthly
         - sensor.server_cost_yearly
+        - sensor.server_cost_total
+
