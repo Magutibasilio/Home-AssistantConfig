@@ -9,9 +9,9 @@ device_tracker:
       - 'tv_samsung_led46'
       - 'ulefone_s7'
       - 'mibox_ania'
-      - 'ble_3c_bd_3e_c1_34_e9'
-      - 'ble_68_a8_a8_54_33_6b'
-      - 'ble_58_d8_d8_4b_c5_23'
+      - 'ble_3c_bd_xx_xx_xx_xx'
+      - 'ble_68_a8_xx_xx_xx_xx'
+      - 'ble_58_d8_xx_xx_xx_xx'
       - 'mibcs'
 #    hci_device: 'hci0'
 #    hide_unnamed: true
@@ -75,17 +75,3 @@ sensor:
     origin: sensor.orig_address
     destination: sensor.dest_address
     region: 'EU'
-
-# https://www.home-assistant.io/components/device_tracker.bluetooth_le_tracker/
-# https://community.home-assistant.io/t/solved-error-setting-up-platform-bluetooth-le-tracker/83187
-# https://github.com/home-assistant/home-assistant/issues/16698
-# https://community.home-assistant.io/t/ble-custom-component/48355/13
-
-# home-server@home-server:~$ hcitool lescan
-# LE Scan ...
-# D8:CC:EE:1C:FA:0E     Amazfit Bip Watch
-# DA:14:DA:5C:12:AA     MI Band 2 Isset
-# D0:DA:C9:67:CC:2A     MI Band 2 Ania
-# F5:01:E5:C6:9E:23     Amazfit Cor Alejandra
-# F9:DE:B8:FC:B6:56     MI Band 2 Juan Rubio
-# ED:66:9A:F0:FD:7A MI Band 2 ????
