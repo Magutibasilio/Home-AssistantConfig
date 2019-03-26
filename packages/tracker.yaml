@@ -48,11 +48,11 @@ sensor:
        orig_address:
          value_template: >-
             {%- if is_state("input_select.origin", "Casa")  -%}
-              Carrer de Cantabria, 44, 08020 Barcelona, Spain
+              Calle TU CASA, nn, CP Barcelona, Spain
             {%- elif is_state("input_select.origin", "Trabajo")  -%}
-              Plaza de Julio Gonzalez, 6, 08005 Barcelona, Spain
+              Plaza TRABAJO, n, CP Barcelona, Spain
             {%- elif is_state("input_select.origin", "Colegio")  -%}
-              Rambla de Guipuscoa, 19, 08018 Barcelona, Spain
+              Rambla COLEGIO, nn, CP Barcelona, Spain
             {%- else -%}
               Madrid, Spain
             {%- endif %}
@@ -61,11 +61,11 @@ sensor:
        dest_address:
          value_template: >-
             {%- if is_state("input_select.destination", "Casa")  -%}
-              Carrer de Cantabria, 44, 08020 Barcelona, Spain
+              Calle TU CASA, nn, CP Barcelona, Spain
             {%- elif is_state("input_select.destination", "Trabajo")  -%}
-              Plaza de Julio Gonzalez, 6, 08005 Barcelona, Spain
+              Plaza TRABAJO, n, CP Barcelona, Spain
             {%- elif is_state("input_select.destination", "Colegio")  -%}
-              Rambla de Guipuscoa, 19, 08018 Barcelona, Spain
+              Rambla COLEGIO, nn, CP Barcelona, Spain
             {%- else -%}
               Sevilla, Spain
             {%- endif %}
