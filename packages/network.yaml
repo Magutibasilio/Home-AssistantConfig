@@ -1,0 +1,15 @@
+## Informacion HA ##
+speedtestdotnet:
+  scan_interval:
+    minutes: 30
+  monitored_conditions:
+      - ping
+      - download
+      - upload
+ 
+      
+## Personalizacion ##
+homeassistant:
+  customize:
+    sensor.uptime:
+      hidden: true

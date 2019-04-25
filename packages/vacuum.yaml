@@ -1,0 +1,409 @@
+## Dispositivo ##
+vacuum:
+  - platform: xiaomi_miio
+    host: 192.168.3.203
+    token: !secret roborock_token
+    name: Clin
+
+
+## Informacion ##
+sensor:
+  - platform: template
+    sensors:
+      vacuum_status:
+        value_template: 'Estado: {{states.vacuum.clin.state}}'
+        entity_id: vacuum.clin
+        friendly_name: Estado de la aspiradora
+        icon_template: mdi:information-variant
+
+  - platform: template
+    sensors:
+      vacuum_battery_level:
+        value_template: 'Batería: {{ states.vacuum.clin.attributes.battery_level }}'
+        entity_id: vacuum.clin
+        unit_of_measurement: '%'
+        friendly_name: Batería restante
+        icon_template: mdi:battery
+
+  - platform: template
+    sensors:
+      vacuum_cleaning_time:
+        value_template: 'Tiempo Limpieza: {{ states.vacuum.clin.attributes.cleaning_time }}'
+        entity_id: vacuum.clin
+        unit_of_measurement: 'minutos'
+        friendly_name: Tiempo de limpieza
+        icon_template: mdi:timer
+
+  - platform: template
+    sensors:
+      vacuum_cleaned_area:
+        value_template: 'Área Limpiada: {{ states.vacuum.clin.attributes.cleaned_area }}'
+        entity_id: vacuum.clin
+        unit_of_measurement: 'm²'
+        friendly_name: Area limpiada
+        icon_template: mdi:vector-square 
+
+  - platform: template
+    sensors:
+      vacuum_do_not_disturb:
+        value_template: '{{ states.vacuum.clin.attributes.do_not_disturb }}'
+        entity_id: vacuum.clin
+        friendly_name: No molestar
+        icon_template: mdi:do-not-disturb
+
+  - platform: template
+    sensors:
+      vacuum_main_brush_left:
+        value_template: 'Cepillo Principal: {{ (states.vacuum.clin.attributes.main_brush_left | round(0) |  int * 100/300) | round(0) }}'
+        entity_id: vacuum.clin
+        unit_of_measurement: '%'
+        friendly_name: Estado del cepillo principal
+        icon_template: mdi:broom 
+
+  - platform: template
+    sensors:
+      vacuum_side_brush_left:
+        value_template: 'Cepillo Lateral: {{ (states.vacuum.clin.attributes.side_brush_left | round(0) |  int * 100/200) | round(0) }}'
+        entity_id: vacuum.clin
+        unit_of_measurement: '%'
+        friendly_name: Estado del cepillo lateral
+        icon_template: mdi:brush  
+
+  - platform: template
+    sensors:
+      vacuum_filter_left:
+        value_template: 'Estado Filtro: {{ (states.vacuum.clin.attributes.filter_left | round(0) |  int * 100/150) | round(0) }}'
+        entity_id: vacuum.clin
+        friendly_name: Estado del filtro
+        unit_of_measurement: '%'
+        icon_template: mdi:filter-variant
+
+  - platform: template
+    sensors:
+      vacuum_sensors_clean_left:
+        value_template: 'Limpieza sensores: {{ (states.vacuum.clin.attributes.sensor_dirty_left | round(0) |  int * 100 / 30) | round(0) }}' 
+        friendly_name: Limpieza de los sensores
+        unit_of_measurement: '%'
+        icon_template: mdi:notification-clear-all      
+
+  - platform: template
+    sensors:
+      vacuum_cleaning_count:
+        value_template: 'Ciclos Limpieza: {{ states.vacuum.clin.attributes.cleaning_count}}'
+        entity_id: vacuum.clin
+        friendly_name: Número de ciclos de limpieza totales
+        icon_template: mdi:counter
+
+  - platform: template
+    sensors:
+      vacuum_total_cleaned_area:
+        value_template: '{{ states.vacuum.clin.attributes.total_cleaned_area}}'
+        entity_id: vacuum.clin
+        unit_of_measurement: 'm²'
+        friendly_name: Área total limpiada
+        icon_template: mdi:shape-square-plus
+
+  - platform: template
+    sensors:
+      vacuum_total_cleaning_time:
+        value_template: '{{ states.vacuum.clin.attributes.total_cleaning_time }}'
+        entity_id: vacuum.clin
+        unit_of_measurement: 'minutos'
+        friendly_name: Tiempo total de limpieza
+        icon_template: mdi:calendar-clock
+
+  - platform: template
+    sensors:
+      vacuum_fan_speed:
+        friendly_name: Velocidad Aspiración
+        entity_id: vacuum.clin
+        value_template: 'Modo Aspiración: {{ states.vacuum.clin.attributes.fan_speed }}'
+        icon_template: 'mdi:speedometer'      
+
+  - platform: template
+    sensors:
+      vacuum_clean_stop:
+        value_template: 'Última Limpieza: {{ states.vacuum.clin.attributes.clean_stop }}'
+        entity_id: vacuum.clin
+        friendly_name: Fecha última limpieza
+        icon_template: mdi:information-variant
+
+#  - platform: template
+#    sensors:
+#      vacuum_fan_speed_list:
+#        friendly_name: "Vacuum - Fan Speed List"
+#        value_template: "{{ states.vacuum.clin.attributes.fan_speed_list }}"
+#        entity_id: vacuum.xiaomi_vacuum
+
+input_boolean:
+  vacuum_auto_day0:
+  vacuum_auto_day1:
+  vacuum_auto_day2:
+  vacuum_auto_day3:
+  vacuum_auto_day4:
+  vacuum_auto_day5:
+  vacuum_auto_day6:
+  vacuum_zone_diningroom:
+  vacuum_zone_bedrooms:
+  vacuum_zone_kitchen:
+  vacuum_zone_office:
+
+input_datetime:
+  vacuum_auto_hour:
+    name: Hora encendido
+    has_date: false
+    has_time: true
+
+input_number:
+  vacuum_manual_passes:
+    name: Numero pasadas
+    icon: mdi:shuffle-disabled
+    initial: 1
+    min: 1
+    max: 3
+    step: 1
+
+input_select:
+  vacuum_fan_speed:
+    icon: mdi:speedometer
+    name: Modo Aspiración
+    options:
+    - Fregado
+    - Silencio
+    - Estandar
+    - Potente
+    - Máximo
+
+
+## Automatizaciones ##
+automation: 
+  - alias: vacuum_msg_start
+    trigger:
+    - entity_id: vacuum.clin
+      platform: state
+      to: 'cleaning'
+      for: '00:00:10'
+    action:
+    - service: notify.domotica_en_casa
+      data:
+        message: 'Comenzando a Limpiar'
+      
+  - alias: vacuum_msg_pause
+    trigger:
+    - entity_id: vacuum.clin
+      platform: state
+      to: 'paused'
+      for: '00:00:10'
+    action:
+    - service: notify.domotica_en_casa
+      data:
+        message: 'Aspiradora con problemas, Error: {{ states.sensor.vacuum_status.state }}.' 
+
+  - alias: vacuum_msg_finish
+    trigger:
+    - entity_id: vacuum.clin
+      platform: state
+      from: 'cleaning'
+      to: 'idle'
+      for: '00:00:10'
+    action:
+    - service: notify.domotica_en_casa
+      data:
+        message: 'Limpieza Acabada'           
+      
+  - alias: vacuum_msg_return
+    trigger:
+    - entity_id: vacuum.clin
+      platform: state
+      to: 'returning'
+      for: '00:00:10'
+    action:
+    - service: notify.domotica_en_casa
+      data:
+        message: 'Aspiradora de vuelta a la base, {{ states.vacuum.clin.attributes.cleaned_area }} m² fueron aspirados en {{ states.vacuum.clin.attributes.cleaning_time }} minutos.'
+      
+  - alias: vacuum_msg_charging
+    trigger:
+    - entity_id: vacuum.clin
+      platform: state
+      to: 'docked'
+      for: '00:00:10'
+    action:
+    - service: notify.domotica_en_casa
+      data:
+        message: 'Cargando ha vuelto a la base de carga'
+      
+################### esto esta en pruebas es para cuando falle diga el error y lo envie,pero no esta aun ########################
+  - alias: vacuum_msg_error
+    trigger:
+    - platform: state
+      entity_id: vacuum.clin
+      to: 'error'
+      for: '00:00:10'
+  #  - platform: state
+  #    entity_id: sensor.vacuum_status
+  #    to: 'idle'
+    - platform: state
+      entity_id: vacuum.clin
+      to: 'charger disconnected'
+    action:
+    - service: notify.domotica_en_casa
+      data:
+        message: 'Aspiradora con problemas, Error: {{ states.sensor.vacuum_status.state }}.'      
+
+  - alias: vacuum_auto_on
+    trigger:
+      platform: template
+      value_template: "{{ states('sensor.time') == (states.input_datetime.vacuum_auto_hour.attributes.timestamp | int | timestamp_custom('%H:%M', False)) }}"
+    condition:
+      condition: or
+      conditions:
+        - condition: template
+          value_template: "{{ ( now().weekday() == (0)) and (states.input_boolean.vacuum_auto_day0.state == 'on') }}"
+        - condition: template
+          value_template: "{{ ( now().weekday() == (1)) and (states.input_boolean.vacuum_auto_day1.state == 'on') }}"
+        - condition: template
+          value_template: "{{ ( now().weekday() == (2)) and (states.input_boolean.vacuum_auto_day2.state == 'on') }}"
+        - condition: template
+          value_template: "{{ ( now().weekday() == (3)) and (states.input_boolean.vacuum_auto_day3.state == 'on') }}"
+        - condition: template
+          value_template: "{{ ( now().weekday() == (4)) and (states.input_boolean.vacuum_auto_day4.state == 'on') }}"
+        - condition: template
+          value_template: "{{ ( now().weekday() == (5)) and (states.input_boolean.vacuum_auto_day5.state == 'on') }}"
+        - condition: template
+          value_template: "{{ ( now().weekday() == (6)) and (states.input_boolean.vacuum_auto_day6.state == 'on') }}"
+    action:
+      - service: vacuum.start
+        entity_id: vacuum.clin
+
+
+## Scripts ##
+script:
+  vacuum_on:
+    sequence:
+      - service: vacuum.start
+        entity_id : vacuum.clin
+
+  vacuum_home:
+    sequence:
+      - service: vacuum.return_to_base
+        entity_id : vacuum.clin
+
+  vacuum_set_quiet:
+    sequence:
+      service: vacuum.set_fan_speed
+      data:
+        entity_id: vacuum.clin
+        fan_speed: Quiet
+
+  vacuum_set_balanced:
+    sequence:
+      service: vacuum.set_fan_speed
+      data:
+        entity_id: vacuum.clin
+        fan_speed: Balanced
+
+  vacuum_set_turbo:
+    sequence:
+      service: vacuum.set_fan_speed
+      data:
+        entity_id: vacuum.clin
+        fan_speed: Turbo
+ 
+  vacuum_set_max:
+    sequence:
+      service: vacuum.set_fan_speed
+      data:
+        entity_id: vacuum.clin
+        fan_speed: Max
+
+  vacuum_zone_kitchen:
+    sequence:
+      service: vacuum.send_command
+      data:
+        entity_id: vacuum.clin
+        command: app_zoned_clean
+        params: '{{ ("[[27250,22500,28570,27950" + "," + (states("input_number.vacuum_manual_passes") | int | string + "]]") )}}'
+ 
+  vacuum_zone_office:
+    sequence:
+      service: vacuum.send_command
+      data:
+        entity_id: vacuum.clin
+        command: app_zoned_clean
+        params: '{{ ("[[25500,23400,27200,27300" + "," + (states("input_number.vacuum_manual_passes") | int | string + "]]") )}}'
+
+  vacuum_zone_diningroom:
+    sequence:
+      service: vacuum.send_command
+      data:
+        entity_id: vacuum.clin
+        command: app_zoned_clean
+        params: '{{ ("[[24100,18000,27300,23450" + "," + (states("input_number.vacuum_manual_passes") | int | string + "]]") )}}'
+
+  vacuum_zone_bedrooms:
+    sequence:
+      service: vacuum.send_command
+      data:
+        entity_id: vacuum.clin
+        command: app_zoned_clean
+        params: '{{ ("[[21100,17800,24150,27300" + "," + (states("input_number.vacuum_manual_passes") | int | string + "],[23500,23500,25400,27300" + "," + (states("input_number.vacuum_manual_passes") | int | string + "]]") )}}'
+#        params: [[21100,17800,24150,27300,{{ states.input_number.vacuum_manual_passes.state }}],[23500,23500,25400,27300,{{ states.input_number.vacuum_manual_passes.state }}]]
+
+
+## Grupo ##
+group:
+  vacuum_msg:
+    name: Limpieza programada
+    entities:
+    - automation.vacuum_msg_charging
+    - automation.vacuum_msg_error
+    - automation.vacuum_msg_finish
+    - automation.vacuum_msg_pause
+    - automation.vacuum_msg_return
+    - automation.vacuum_msg_start
+
+  vacuum_auto_on:
+    name: Limpieza programada
+    icon: mdi:calendar-clock
+    entities:
+    - input_boolean.vacuum_auto_day0
+    - input_boolean.vacuum_auto_day1
+    - input_boolean.vacuum_auto_day2
+    - input_boolean.vacuum_auto_day3
+    - input_boolean.vacuum_auto_day4
+    - input_boolean.vacuum_auto_day5
+    - input_boolean.vacuum_auto_day6
+
+  vacuum_manual:
+    name: Limpieza manual
+    icon: mdi:map-marker
+    entities:
+    - input_boolean.vacuum_zone_diningroom
+    - input_boolean.vacuum_zone_bedrooms
+    - input_boolean.vacuum_zone_kitchen
+    - input_boolean.vacuum_zone_office
+
+
+## Personalizacion ##
+homeassistant:
+  customize:
+    automation.vacuum_msg_charging:
+      friendly_name: Cargando
+    automation.vacuum_msg_start:
+      friendly_name: Empezando a limpiar
+    automation.vacuum_msg_pause:
+      friendly_name: Limpieza en Pausa
+    automation.vacuum_msg_finish:
+      friendly_name: Limpieza Acabada
+    automation.vacuum_msg_return:
+      friendly_name: Regresar a Base
+    automation.vacuum_msg_error:
+      friendly_name: Error
+    automation.vacuum_auto_on:
+      friendly_name: Limpieza programada
+    group.vacuum_auto_on:
+      friendly_name: Programado
+    group.vacuum_msg:
+      friendly_name: Avisos telegram
+      icon: mdi:telegram

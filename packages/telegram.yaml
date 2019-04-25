@@ -1,0 +1,30 @@
+### Bot Telegram ###
+telegram_bot:
+  - platform: polling
+    api_key: !secret telegram_key
+    allowed_chat_ids:
+      - !secret telegram_chatID1
+      - !secret telegram_ID
+      
+notify:
+  - name: 'Domotica en Casa'
+    platform: telegram
+    api_key: !secret telegram_key
+    chat_id: !secret telegram_chatID1
+    
+  - name: 'administrador'
+    platform: telegram
+    api_key: !secret telegram_key
+    chat_id: !secret telegram_ID    
+    
+    
+# Allows you to issue voice commands from the frontend in enabled browsers
+conversation:
+  intents:
+    TemperaturaDormitorio:
+     - ¿Qué temperatura hay en el dormitorio?
+
+intent_script:
+  TemperaturaDormitorio:
+    speech:
+      text: La temperatura es de {{ states.sensor.dormitorio_temperatura }} grados.

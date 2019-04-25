@@ -1,0 +1,147 @@
+## Informacion ##
+sensor:
+  - platform: uptime
+    unit_of_measurement: minutes
+
+  - platform: template
+    sensors:
+      uptime_templated:
+        entity_id: sensor.uptime
+        icon_template: mdi:clock-start
+        value_template: >-
+          {% set uptime = states.sensor.uptime.state | int %}
+          {% set minutes = (uptime % 60) | int %}
+          {% set hours = ((uptime % 1440) / 60) | int %}
+          {% set days = (uptime / 1440) | int %}
+          {{ days }}d {{ ' : ' }} {{ hours }}h {{ ' : ' }} {{ minutes }}m
+
+  - platform: version
+    scan_interval: 1200
+
+  - platform: command_line
+    name: Last HA Version
+    scan_interval: 1200
+    command: python3 -c "import requests; print(requests.get('https://pypi.python.org/pypi/homeassistant/json').json()['info']['version'])"
+ 
+ 
+## Scripts ##
+script:
+  restart_home_assistant:
+    alias: Restart Home Assistant
+    sequence:
+      - service: homeassistant.restart
+
+#  update_home_assistant:
+#    alias: Update Home Assistant
+#    sequence:
+#      - service: shell_command.update_ha
+#      - delay: '00:00:30'
+#      - service: homeassistant.restart
+
+ 
+## Comandos  ##
+#shell_command:
+#  update_ha: sudo apt-get update && sudo apt-get upgrade
+#  update_ha: source /srv/homeassistant/bin/activate && pip3 install --upgrade homeassistant
+#  update_ha: echo {{ !secret sudo_psw_ha }} | sudo -S /home/homeassistant/.homeassistant/scripts/update_ha.sh
+#  update_ha: ssh homeassistant@192.168.3.10 sudo bash /home/homeassistant/.homeassistant/scripts/update_ha.sh
+#  update_ha: echo {{ !secret sudo_psw_ha }} | sudo -S /home/homeassistant/.homeassistant/scripts/update_ha.sh
+
+
+## Automatizaciones ##
+automation:
+  - alias: zigbee lost connection
+    initial_state: true
+    trigger:
+      - platform: state
+        entity_id: sensor.battery_aa_agua
+        to: 'unavailable'
+        for: '00:01:00'
+      - platform: state
+        entity_id: sensor.battery_ania_temperatura
+        to: 'unavailable'
+        for: '00:01:00'
+      - platform: state
+        entity_id: sensor.battery_balcon_temperatura
+        to: 'unavailable'
+        for: '00:01:00'
+      - platform: state
+        entity_id: sensor.battery_bano_temperatura
+        to: 'unavailable'
+        for: '00:01:00'
+      - platform: state
+        entity_id: sensor.battery_cocina_movimiento
+        to: 'unavailable'
+        for: '00:01:00'
+      - platform: state
+        entity_id: sensor.battery_cocina_temperatura
+        to: 'unavailable'
+        for: '00:01:00'
+      - platform: state
+        entity_id: sensor.battery_comedor_aa
+        to: 'unavailable'
+        for: '00:01:00'
+      - platform: state
+        entity_id: sensor.battery_comedor_movimiento
+        to: 'unavailable'
+        for: '00:01:00'
+      - platform: state
+        entity_id: sensor.battery_comedor_temperatura
+        to: 'unavailable'
+        for: '00:01:00'
+      - platform: state
+        entity_id: sensor.battery_comedor_ventana_der
+        to: 'unavailable'
+        for: '00:01:00'
+      - platform: state
+        entity_id: sensor.battery_comedor_ventana_izq
+        to: 'unavailable'
+        for: '00:01:00'
+      - platform: state
+        entity_id: sensor.battery_despacho_temperatura
+        to: 'unavailable'
+        for: '00:01:00'
+      - platform: state
+        entity_id: sensor.battery_dormitorio_temperatura
+        to: 'unavailable'
+        for: '00:01:00'
+      - platform: state
+        entity_id: sensor.battery_entrada_puerta
+        to: 'unavailable'
+        for: '00:01:00'
+      - platform: state
+        entity_id: sensor.battery_invitados_temperatura
+        to: 'unavailable'
+        for: '00:01:00'
+    action:
+      - service: notify.administrador
+        data:
+          message: "Reiniciando HA por pérdida de señal en los sensores"
+      - delay: '00:00:05'
+      - service: homeassistant.restart
+
+
+## Personalizacion ##
+homeassistant:
+  customize:
+    sensor.uptime:
+      hidden: true
+    sensor.uptime_templated:
+      friendly_name: Tiempo activo
+      icon: mdi:clock-start
+    sensor.current_version:
+      friendly_name: Versión actual
+      icon: mdi:home-assistant
+    sensor.last_ha_version:
+      friendly_name: Última versión
+      icon: mdi:home-alert
+    script.restart_home_assistant:
+      friendly_name: Reiniciar HA
+      icon: mdi:restart
+    script.update_home_assistant:
+      friendly_name: Actualizar HA
+      icon: mdi:update
+#      icon: mdi:shield-cross-outline
+#      icon: mdi:skull-crossbones-outline
+    updater.updater:
+       hidden: true

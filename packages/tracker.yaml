@@ -9,9 +9,9 @@ device_tracker:
       - 'tv_samsung_led46'
       - 'ulefone_s7'
       - 'mibox_ania'
-      - 'ble_3c_bd_xx_xx_xx_xx'
-      - 'ble_68_a8_xx_xx_xx_xx'
-      - 'ble_58_d8_xx_xx_xx_xx'
+      - 'ble_3c_'
+      - 'ble_68_'
+      - 'ble_58_'
       - 'mibcs'
 #    hci_device: 'hci0'
 #    hide_unnamed: true
@@ -48,26 +48,26 @@ sensor:
        orig_address:
          value_template: >-
             {%- if is_state("input_select.origin", "Casa")  -%}
-              Calle TU CASA, nn, CP Barcelona, Spain
+              Carrer de  Barcelona, Spain
             {%- elif is_state("input_select.origin", "Trabajo")  -%}
-              Plaza TRABAJO, n, CP Barcelona, Spain
+              Plaza de  Barcelona, Spain
             {%- elif is_state("input_select.origin", "Colegio")  -%}
-              Rambla COLEGIO, nn, CP Barcelona, Spain
+              Rambla de  Barcelona, Spain
             {%- else -%}
-              Madrid, Spain
+              unknown
             {%- endif %}
   - platform: template
     sensors:
        dest_address:
          value_template: >-
             {%- if is_state("input_select.destination", "Casa")  -%}
-              Calle TU CASA, nn, CP Barcelona, Spain
+              Carrer de  Barcelona, Spain
             {%- elif is_state("input_select.destination", "Trabajo")  -%}
-              Plaza TRABAJO, n, CP Barcelona, Spain
+              Plaza de  Barcelona, Spain
             {%- elif is_state("input_select.destination", "Colegio")  -%}
-              Rambla COLEGIO, nn, CP Barcelona, Spain
+              Rambla de  Barcelona, Spain
             {%- else -%}
-              Sevilla, Spain
+              unknown
             {%- endif %}
 
   - platform: waze_travel_time
@@ -75,3 +75,38 @@ sensor:
     origin: sensor.orig_address
     destination: sensor.dest_address
     region: 'EU'
+
+  - platform: waze_travel_time
+    name: "Trayecto Colegio"
+    origin: Carrer de  Barcelona, Spain
+    destination: Rambla de  Barcelona, Spain
+    region: 'EU'
+
+
+## Automatizaciones ##
+automation:
+  - alias: aviso_trafico_colegio
+    initial_state: true
+    trigger:
+      - platform: time
+        at: 08:20:00
+      - platform: time
+        at: 08:30:00
+    condition:
+      condition: and
+      conditions:
+        - condition: numeric_state
+          entity_id: sensor.trayecto_colegio
+          above: 8
+        - condition: state
+          entity_id: 'binary_sensor.workday_sensor'
+          state: 'on'
+    action:
+      - service: media_player.volume_set
+        data:
+          entity_id: media_player.alexa_comedor
+          volume_level: 0.5
+      - service: media_player.alexa_tts
+        data_template:
+          entity_id: media_player.alexa_comedor
+          message: "El tráfico al colegio hoy es superior. El mejor camino es {{ states.sensor.trayecto_colegio.attributes.route }}"
