@@ -14,13 +14,15 @@ homeassistant:
   # Pick yours from here: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
   time_zone: Europe/Madrid
   # Customization file
-  customize: !include config/customize.yaml
+  #customize: !include config/customize.yaml
   packages: !include_dir_named packages
 
-
+  auth_providers:
+   - type: legacy_api_password
+     api_password: !secret ha_password
+     
+     
 ### Listado dispositivos ###
-alarm_control_panel: !include alarm.yaml
-
 xiaomi_aqara:
   gateways:
     - mac: !secret xiaomi_aqara_mac
@@ -38,6 +40,11 @@ custom_updater:
     - components
     - cards
     - python_scripts
+  component_urls:
+    # Dev build (unstable)
+    - https://raw.githubusercontent.com/keatontaylor/alexa_media_player/next/custom_components.json
+    # Released build
+    - https://raw.githubusercontent.com/keatontaylor/alexa_media_player/master/custom_components.json
   card_urls:
     - https://raw.githubusercontent.com/Gluwc/bar-card/master/tracker.json
     - https://raw.githubusercontent.com/kuuji/button-card/master/tracker.json
@@ -45,7 +52,9 @@ custom_updater:
     - https://raw.githubusercontent.com/nervetattoo/simple-thermostat/master/tracker.json
     - https://raw.githubusercontent.com/kalkih/mini-media-player/master/tracker.json
     - https://raw.githubusercontent.com/kalkih/mini-graph-card/master/tracker.json
-    
+    - https://raw.githubusercontent.com/ljmerza/waze-card/master/custom_updater.json
+    - https://raw.githubusercontent.com/cbulock/lovelace-battery-entity/master/tracker.json
+        
 system_health:
 
 
@@ -65,7 +74,7 @@ config:
 
 # Uncomment this if you are using SSL/TLS, running in Docker container, etc.
 http:
-  api_password: !secret ha_password
+#  api_password: !secret ha_password
   base_url: https://!secret url_ddns:8123
   ssl_certificate: /home/homeassistant/.homeassistant/www/fullchain.pem
   ssl_key: /home/homeassistant/.homeassistant/www/privkey.pem
@@ -111,8 +120,20 @@ tts:
     
     
 # Cloud
-cloud:
-
+#cloud:
+#  alexa:
+#   filter:
+#     exclude_domains:
+#       - automation
+#       - camera
+#       - device_tracker
+#       - group
+#       - input_boolean
+#       - input_datetime
+#       - input_number
+#       - input_select
+#       - script
+       
 
 # Recorder
 recorder:
@@ -129,7 +150,11 @@ recorder:
       - sensor.date
       - sensor.date_template
       - sensor.workday_template
+      - sensor.custom_card_tracker
+      - sensor.custom_component_tracker
+      - sensor.custom_python_script_tracker
 # servidor #
+      - sensor.current_version
       - sensor.last_boot
       - sensor.server_uptime
       - sensor.uptime_templated
@@ -144,6 +169,10 @@ recorder:
       - script.update_home_assistant
       - sensor.last_backup_emby
       - sensor.last_backup_ha
+      - sensor.backup_count_emby
+      - sensor.backup_count_ha
+      - sensor.backup_size_total_emby
+      - sensor.backup_size_total_ha
       - sensor.ssl_certificate_expiry
       - sensor.cpu_speed
 # comedor #
@@ -151,6 +180,11 @@ recorder:
       - input_datetime.aa_comedor_off_laborable
       - input_datetime.aa_comedor_on_festivo
       - input_datetime.aa_comedor_on_laborable
+      - input_number.aa_comedor_temp_cool_auto
+      - input_number.aa_comedor_temp_cool_on
+      - input_number.aa_comedor_temp_heat_auto
+      - input_number.aa_comedor_temp_heat_on
+      - automation.aa_agua_msg
 # cocina #      
       - input_datetime.dishwasher_on
 # despacho #
@@ -161,12 +195,15 @@ recorder:
 # precio luz #
       - sensor.fecha
       - sensor.hora_recogida_de_datos
+      - sensor.maximo_diario_eur_kwh
+      - sensor.maximo_diario_hora
+      - sensor.minimo_diario_eur_kwh
+      - sensor.minimo_diario_hora
 # trayecto #
       - input_select.origin
       - input_select.destination
       - sensor.orig_address
       - sensor.dest_address
-      - sensor.trayecto
 # vacuum #
       - sensor.vacuum_battery_level
       - sensor.vacuum_clean_stop
@@ -184,10 +221,14 @@ recorder:
       - input_boolean.vacuum_auto_day4
       - input_boolean.vacuum_auto_day5
       - input_boolean.vacuum_auto_day6
+      - group.vacuum_auto_on
 # meteo #
       - sensor.wind_dir
       - camera.meteo_fijo
       - camera.meteo_movil
+#      - sensor.u_s_air_pollution_level
+#      - sensor.u_s_air_quality_index
+#      - sensor.u_s_main_pollutant
 # bateria sensores #
       - sensor.battery_ania_temperatura
       - sensor.battery_balcon_temperatura
@@ -203,10 +244,10 @@ recorder:
       - sensor.battery_llavero_ania
       - sensor.battery_llavero_isset
       - sensor.battery_llavero_jcc
-    
+
     
 ### Aspecto ###
-panel_custom: !include config/panel_custom.yaml
+#panel_custom: !include config/panel_custom.yaml
 panel_iframe: !include config/panel_iframe.yaml
 
 lovelace :
@@ -214,10 +255,42 @@ lovelace :
    
    
 ### Subrutinas ###
-shell_command: !include config/shell_command.yaml
+#shell_command: !include config/shell_command.yaml
 
 
 ### API ###
-#api:
-#alexa:
-# smart_home:
+api:
+
+alexa:
+ smart_home:
+   filter:
+     exclude_domains:
+       - automation
+       - binary_sensor
+       - camera
+       - device_tracker
+       - group
+       - input_boolean
+       - input_datetime
+       - input_number
+       - input_select
+       - light
+       - media_player
+       - script
+       - sensor
+       - sun
+       - switch
+       - vacuum
+       - weather
+       - zone
+     include_entities:
+       - script.vacuum_on
+       - script.vacuum_home
+       - sensor.ania_temperatura
+       - sensor.balcon_temperatura
+       - sensor.bano_temperatura
+       - sensor.cocina_temperatura
+       - sensor.comedor_temperatura
+       - sensor.despacho_temperatura
+       - sensor.dormitorio_temperatura
+       - sensor.invitados_temperatura
