@@ -1,0 +1,105 @@
+## Automatizaciones ##
+automation:
+  - alias: Alarma apagada - JCC
+    trigger:
+      - platform: state
+        entity_id: binary_sensor.llavero_jcc
+        to: 'on'
+        for: '00:00:01'
+    condition:
+      - condition: state
+        entity_id: 'switch.comedor_enchufe'
+        state: 'off'
+    action:
+      - service: notify.domotica_en_casa
+        data:
+          message: "Alarma desactivada por JCC"
+      - delay: '00:00:05'
+      - service: xiaomi_aqara.play_ringtone
+        data:
+          gw_mac: !secret xiaomi_aqara_mac
+          ringtone_id: 10013
+          ringtone_vol: 50
+      - delay: '00:00:05'
+      - service: media_player.volume_set
+        data:
+          entity_id: media_player.alexa_comedor
+          volume_level: 0.5
+      - service: media_player.alexa_tts
+        data:
+          entity_id: media_player.alexa_comedor
+          message: "Bienvenida a casa rey de la jungla"
+
+  - alias: Alarma apagada - Isset
+    trigger:
+      - platform: state
+        entity_id: binary_sensor.llavero_isset
+        to: 'on'
+        for: '00:00:01'
+    condition:
+      - condition: state
+        entity_id: 'switch.comedor_enchufe'
+        state: 'off'
+    action:
+      - service: notify.domotica_en_casa
+        data:
+          message: "Alarma desactivada por Isset"
+      - delay: '00:00:05'
+      - service: xiaomi_aqara.play_ringtone
+        data:
+          gw_mac: !secret xiaomi_aqara_mac
+          ringtone_id: 10013
+          ringtone_vol: 50
+      - delay: '00:00:05'
+      - service: media_player.volume_set
+        data:
+          entity_id: media_player.alexa_comedor
+          volume_level: 0.5
+      - service: media_player.alexa_tts
+        data:
+          entity_id: media_player.alexa_comedor
+          message: "Bienvenida a casa Isset"
+
+  - alias: Alarma apagada - Ania
+    trigger:
+      - platform: state
+        entity_id: binary_sensor.llavero_ania
+        to: 'on'
+        for: '00:00:01'
+    condition:
+      - condition: state
+        entity_id: 'switch.comedor_enchufe'
+        state: 'off'
+    action:
+      - service: notify.domotica_en_casa
+        data:
+          message: "Alarma desactivada por Ania"
+      - delay: '00:00:05'
+      - service: xiaomi_aqara.play_ringtone
+        data:
+          gw_mac: !secret xiaomi_aqara_mac
+          ringtone_id: 10013
+          ringtone_vol: 50
+      - delay: '00:00:05'
+      - service: media_player.volume_set
+        data:
+          entity_id: media_player.alexa_comedor
+          volume_level: 0.5
+      - service: media_player.alexa_tts
+        data:
+          entity_id: media_player.alexa_comedor
+          message: "Bienvenidos a casa familia"
+
+
+## Personalizacion ##
+homeassistant:
+  customize:
+    binary_sensor.entrada_puerta:
+      device_class: door
+    binary_sensor.llavero_jcc:
+      icon: mdi:account-key 
+    binary_sensor.llavero_isset:
+      icon: mdi:account-key 
+    binary_sensor.llavero_ania:
+      icon: mdi:account-key 
+      

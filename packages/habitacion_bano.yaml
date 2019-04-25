@@ -1,0 +1,10 @@
+## Sensores ##
+sensor:
+  - platform: template
+    sensors:
+      windchill_bano:
+        value_template: '{{ ((states.sensor.bano_temperatura.state|float) + 0.348*((((states.sensor.bano_humedad.state|float)/100)*6.105)*(2.71828**((17.27*(states.sensor.bano_temperatura.state|float))/(237.7+(states.sensor.bano_temperatura.state|float))))) - 4.25) | round(2) }}'
+        friendly_name: Balcón - Sensación térmica
+        icon_template: mdi:thermometer-lines
+        device_class: temperature   
+        unit_of_measurement: '°C'

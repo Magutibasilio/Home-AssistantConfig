@@ -1,0 +1,53 @@
+## Sensores ##
+input_datetime:
+  miboxania_on:
+    name: Hora encendido
+    has_date: false
+    has_time: true
+
+  miboxania_off:
+    name: Hora apagado
+    has_date: false
+    has_time: true
+
+sensor:
+  - platform: template
+    sensors:
+      windchill_despacho:
+        value_template: '{{ ((states.sensor.despacho_temperatura.state|float) + 0.348*((((states.sensor.despacho_humedad.state|float)/100)*6.105)*(2.71828**((17.27*(states.sensor.despacho_temperatura.state|float))/(237.7+(states.sensor.despacho_temperatura.state|float))))) - 4.25) | round(2) }}'
+        friendly_name: Despacho - Sensación térmica
+        icon_template: mdi:thermometer-lines
+        device_class: temperature   
+        unit_of_measurement: '°C'
+
+
+## Automatizaciones ##
+automation:
+  - alias: miboxania_on
+    trigger:
+      platform: template
+      value_template: "{{ states('sensor.time') == (states.input_datetime.miboxania_on.attributes.timestamp | int | timestamp_custom('%H:%M', False)) }}"
+    action:
+    - service: switch.turn_on
+      entity_id: switch.ania_media
+
+  - alias: miboxania_off
+    trigger:
+      platform: template
+      value_template: "{{ states('sensor.time') == (states.input_datetime.miboxania_off.attributes.timestamp | int | timestamp_custom('%H:%M', False)) }}"
+    action:
+    - service: switch.turn_off
+      entity_id: switch.ania_media
+
+
+## Personalizacion ##
+homeassistant:
+  customize:
+    switch.ania_media:
+      icon: mdi:youtube-tv
+    automation.miboxania_on:
+      friendly_name: Encendido programado
+      icon: mdi:calendar-clock
+    automation.miboxania_off:
+      friendly_name: Apagado programado
+      icon: mdi:calendar-clock
