@@ -5,6 +5,8 @@ class BarCard extends HTMLElement {
   }
   setConfig (config) {
     // Default Card variables
+    const initialConfig = Object.assign({}, config)
+
     if (!config.height) config.height = '40px'
     if (!config.direction) config.direction = 'right'
     if (!config.rounding) config.rounding = '3px'
@@ -14,25 +16,40 @@ class BarCard extends HTMLElement {
     if (!config.animation) config.animation = 'auto'
     if (!config.speed) config.speed = 1000
     if (!config.delay) config.delay = 5000
-    if (!config.min) config.min = 0
-    if (!config.max) config.max = 100
     if (!config.padding) config.padding = '4px'
+    if (!config.align) config.align = 'center'
+    if (!config.color) config.color = 'var(--primary-color)'
+    if (!config.tap_action) config.tap_action = 'info'
+    if (!config.show_icon) config.show_icon = false
+    if (!config.show_value) config.show_value = true
+    if (!config.title) config.title = false
+    if (!config.severity) config.severity = false
+    if (!config.target) config.target = false
+    if (!config.attribute) config.attribute = false
+    if (!config.icon) config.icon = false
+    if (!config.charge_entity) config.charge_entity = false
+    if (!config.unit_of_measurement) config.unit_of_measurement = false
+    if (!config.card_style) config.card_style = false
+    if (!config.icon_style) config.icon_style = false
+    if (!config.title_style) config.title_style = false
+    if (!config.value_style) config.value_style = false
+    if (!config.background_style) config.background_style = false
+    if (!config.visibility) config.visibility = false
 
     // Check entity types
-    let updateArray = false
-    let updateEntity = false
+    let updateArray
     if (config.entities) {
         let newArray = []
         config.entities.forEach(section => {
-          let type = typeof(section);
+          let type = typeof(section)
           if (type == 'string'){
-            let constructObject = {"entity":section};
+            let constructObject = {"entity":section}
             newArray.push(constructObject)
             updateArray = true
-          } else {
-            updateEntity = true
+          } else if (type == 'object') {
+            newArray.push(section)
+            updateArray = true
           }
-
         })
         if(updateArray == true){
           config.entities = newArray;
@@ -48,39 +65,57 @@ class BarCard extends HTMLElement {
       } else {
         config.width = '100%'
       }
-      if (config.title_position == "top" || config.title_position == "bottom"){
+      if (config.title_position == 'top' || config.title_position == 'bottom' || config.title_position == 'off'){
         config.width = '100%'
       }
     }
 
+    if (config.card_style !== false) var cardStyle = this._customStyle(config.card_style)
+
     // Define card container
-    let cardContainer = document.createElement('card-container')
+    let cardContainer = document.createElement('ha-card')
     let cardContainerStyle = document.createElement('style')
     cardContainerStyle.textContent = `
-    card-container {
-      display: flex;
-      justify-content: space-around;
-      flex-wrap: wrap;
-    }
-    
+      ha-card {
+        padding: calc(${config.padding} / 2);
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        ${cardStyle}
+      }  
     `
-    // For each entity in entities list
-    for (var i = 0; i <= config.entities.length-1; i++){
-      let entityName = config.entities[i].entity.split('.')
-      cardContainer.appendChild(this._cardElements(config, entityName[0]+'_'+entityName[1]+i, config.entities[i].entity))
+    // For each entity in entities list create cardElements
+    this._configArray = []
+    this._initialConfigArray = []
+    for (let i = 0; i <= config.entities.length-1; i++){
+      const entityName = config.entities[i].entity.split('.')
+      this._configArray[i] = Object.assign({},config)
+      this._initialConfigArray[i] = Object.assign({}, initialConfig)
+      Object.keys(config).forEach(section => {
+        const config = this._configArray[i]
+        const entities = config.entities[i]
+        const initialConfig = this._initialConfigArray[i]
+        if (entities[section] !== undefined) {
+          config[section] = entities[section]
+          initialConfig[section] = entities[section]
+        }
+      })
+      cardContainer.appendChild(this._cardElements(this._configArray[i], entityName[0]+'_'+entityName[1]+'_'+i, config.entities[i].entity))
     }
 
+    // Add card container to root
     this.shadowRoot.appendChild(cardContainer)
     this.shadowRoot.appendChild(cardContainerStyle)
     
-    // For each entity in entities list. Initial update.
-    if (updateEntity == true) {
-      for(var i=0; i <= config.entities.length-1; i++){
+    // For each entity in entities list update entity.
+    if (this._hass) {
+      for(let i=0; i <= config.entities.length-1; i++){
         let entityName = config.entities[i].entity.split('.')
-        this._updateEntity(config.entities[i].entity, entityName[0]+'_'+entityName[1]+i)
+        this._updateEntity(config.entities[i].entity, entityName[0]+'_'+entityName[1]+'_'+i, i)
       }
     }
 
+    // Set config for this card.
     this._config = config
   }
 
@@ -88,15 +123,16 @@ class BarCard extends HTMLElement {
   set hass (hass) {
     this._hass = hass
     const config = this._config
-    for(var i=0; i <= config.entities.length-1; i++){
+    for(let i=0; i <= config.entities.length-1; i++){
       let entityName = config.entities[i].entity.split('.')
-      this._updateEntity(config.entities[i].entity, entityName[0]+'_'+entityName[1]+i)
+      this._updateEntity(config.entities[i].entity, entityName[0]+'_'+entityName[1]+'_'+i, i)
     }
   }
 
+  // Create card elements
   _cardElements(config, id, entity) {
-    // Create card elements
-    const card = document.createElement('ha-card')
+    const card = document.createElement('div')
+    card.id = 'card_'+id
     const container = document.createElement('div')
     container.id = 'container_'+id
     const background = document.createElement('div')
@@ -105,73 +141,48 @@ class BarCard extends HTMLElement {
     backgroundBar.id = 'backgroundBar_'+id
     const bar = document.createElement('div')
     bar.id = 'bar_'+id
+    const contentBar = document.createElement('div')
+    contentBar.id = 'contentBar_'+id
+    var icon = document.createElement('ha-icon')
+    icon.id = 'icon_'+id  
+    var title = document.createElement('div')
+    title.id = 'title_'+id
+    var titleBar = document.createElement('div')
+    titleBar.id = 'titleBar_'+id
     const value = document.createElement('div')
     value.id = 'value_'+id
-
-    // Check if animation is enabled
-    if (config.animation !== "off") {
-      var chargeBar = document.createElement('div')
-      chargeBar.id = 'chargeBar_'+id
-    }
-
-    // Check if target is defined
-    if (config.target) {
-      var targetBar = document.createElement('div')
-      targetBar.id = 'targetBar_'+id
-      var targetBarColor = document.createElement('div')
-      targetBarColor.id = 'targetBarColor_'+id
-      var targetMarker = document.createElement('div')
-      targetMarker.id = 'targetMarker_'+id
-      var targetMarkerColor = document.createElement('div')
-      targetMarkerColor.id = 'targetMarkerColor_'+id
-    }
-
-    // Check if indicator is enabled
-    if (config.indicator !== "off"){
-      var indicatorContainer = document.createElement('div')
-      indicatorContainer.id = 'indicatorContainer_'+id
-      var indicatorBar = document.createElement('div')
-      indicatorBar.id = 'indicatorBar_'+id
-      var indicator = document.createElement('div')
-      indicator.id = 'indicator_'+id
-      var indicatorColor = document.createElement('div')
-      indicatorColor.id = 'indicatorColor_'+id
-    }
-
-    // Check if title is not inside
-    if (config.title !== "inside"){
-      var title = document.createElement('div')
-      title.id = 'title_'+id
-      var titleBar = document.createElement('div')
-      titleBar.id = 'titleBar_'+id
-    }
+    var chargeBar = document.createElement('div')
+    chargeBar.id = 'chargeBar_'+id
+    var targetBar = document.createElement('div')
+    targetBar.id = 'targetBar_'+id
+    var targetMarker = document.createElement('div')
+    targetMarker.id = 'targetMarker_'+id
+    var indicatorContainer = document.createElement('div')
+    indicatorContainer.id = 'indicatorContainer_'+id
+    var indicatorBar = document.createElement('div')
+    indicatorBar.id = 'indicatorBar_'+id
+    var indicator = document.createElement('div')
+    indicator.id = 'indicator_'+id
         
     // Start building card
     background.appendChild(backgroundBar)
     background.appendChild(bar)
-
-    // Check if animation is not disabled
-    if (config.animation !== "off") {
-      background.appendChild(chargeBar)
+    bar.appendChild(targetMarker)
+    background.appendChild(targetBar)
+    background.appendChild(chargeBar)
+    indicatorContainer.appendChild(indicator)
+    switch (config.align) {
+      case 'center':
+      case 'center-split':
+      case 'left-split':
+      case 'right-split':
+        indicatorBar.appendChild(indicatorContainer)
+        background.appendChild(indicatorBar)
+        break
+      default:
+        background.appendChild(indicatorContainer)
     }
-
-    // Check if target is configured
-    if (config.target) {
-      targetBar.appendChild(targetMarker)
-      targetBarColor.appendChild(targetMarkerColor)
-      background.appendChild(targetBar)
-      background.appendChild(targetBarColor)
-    }
-
-    // Check if indicator is not disabled
-    if (config.indicator != 'off') {
-      indicatorContainer.appendChild(indicator)
-      indicatorContainer.appendChild(indicatorColor)
-      indicatorBar.appendChild(indicatorContainer)
-      background.appendChild(indicatorBar)
-    }
-
-    // Select title position
+    contentBar.appendChild(icon) 
     switch (config.title_position) {
       case 'left':
       case 'right':
@@ -184,53 +195,65 @@ class BarCard extends HTMLElement {
         container.appendChild(background)
         break
       case 'inside':
-        background.appendChild(title)
+        contentBar.appendChild(title)
+        container.appendChild(contentBar)
         container.appendChild(background)
+        break
+      case 'off':
+        container.appendChild(background)      
     }
-
-    background.appendChild(value)
+    contentBar.appendChild(value)
+    background.appendChild(contentBar)
     card.appendChild(container)
     card.appendChild(this._styleElements(config, id))
-
-    card.addEventListener('click', event => {
-      this._showAttributes('hass-more-info', { entityId: entity })
-    })
+    switch (config.tap_action) {
+      case 'info':
+        card.addEventListener('click', event => {
+          this._showAttributes('hass-more-info', { entityId: entity })
+        })
+        break
+      case 'service':
+        card.addEventListener('click', event => {
+          this._serviceCall(config.service_options.domain, config.service_options.service, config.service_options.data)
+        })
+        break
+    }
 
     return card
   }
-
+  
+  // Create style elements
   _styleElements(config, id) {
     const style = document.createElement('style');
-    // Create CSS style variables
-    if (config.bar_style) var barStyle = this._customStyle(config.bar_style)
-    if (config.title_style) var titleStyle = this._customStyle(config.title_style)
-    if (config.indicator_style) var indicatorStyle = this._customStyle(config.indicator_style)
-    if (config.card_style) var cardStyle = this._customStyle(config.card_style)
+    if (config.value_style !== false) var valueStyle = this._customStyle(config.value_style)
+    if (config.title_style !== false) var titleStyle = this._customStyle(config.title_style)
+    if (config.icon_style !== false) var iconStyle = this._customStyle(config.icon_style)
+    if (config.background_style !== false) var backgroundStyle = this._customStyle(config.background_style)
 
-    // Sets position of the title
+    // Sets position of the titleBar
     let titleAlign
     let titleWidth
-    let flexDirection
+    let titleflexDirection
     switch (config.title_position) {
       case 'left':
         titleWidth = 'width: calc(100% - ' + config.width + ');'
         titleAlign = 'justify-content: flex-start;'
-        flexDirection = 'flex-direction: row;'
+        titleflexDirection = 'flex-direction: row;'
         break
       case 'right':
         titleWidth = 'width: calc(100% - ' + config.width + ');'
         titleAlign = 'justify-content: flex-start;'
-        flexDirection = 'flex-direction: row-reverse;'
+        titleflexDirection = 'flex-direction: row-reverse;'
         break
       case 'top':
         titleWidth = 'width: 100%;'
         titleAlign = 'justify-content: center;'
-        flexDirection = 'flex-direction: column;'
+        titleflexDirection = 'flex-direction: column;'
         break
       case 'bottom':
         titleWidth = 'width: 100%;'
         titleAlign = 'justify-content: center;'
-        flexDirection = 'flex-direction: column-reverse;'
+        titleflexDirection = 'flex-direction: column-reverse;'
         break
     }
 
@@ -240,20 +263,24 @@ class BarCard extends HTMLElement {
     let insideWhitespace
     switch (config.direction) {
       case 'left':
+      case 'left-reverse':
         barFrom = 'left'
         markerDirection = 'right'
         insideWhitespace = 'nowrap'
         break
       case 'right':
+      case 'right-reverse':
         barFrom = 'right'
         markerDirection = 'left'
         insideWhitespace = 'nowrap'
         break
       case 'up':
+      case 'up-reverse':
         barFrom = 'top'
         markerDirection = 'bottom'
         break
       case 'down':
+      case 'down-reverse':
         barFrom = 'bottom'
         markerDirection = 'top'
         break
@@ -263,164 +290,242 @@ class BarCard extends HTMLElement {
     let markerStyle
     if (barFrom == 'left' || barFrom == 'right') {
       markerStyle = `
-      #targetMarker_${id}, #targetMarkerColor_${id} {
-        position: absolute;
-        background: #FFF0;
-        ` + markerDirection + `: var(--targetMarker-percent);
+        ${markerDirection}: var(--targetMarker-percent);
         height: ${config.height};
-        border-left: 2px dashed var(--targetMarker-color);
-      }
-      #targetMarkerColor_${id} {
-        border-left: 2px dashed var(--bar-fill-color);
-      }
+        border-left: 2px dashed var(--bar-color);
       `
     } else {
       markerStyle = `
-      #targetMarker_${id}, #targetMarkerColor_${id} {
-        position: absolute;
-        background: #FFF0;
-        ` + markerDirection + `: var(--targetMarker-percent);
+        ${markerDirection}: var(--targetMarker-percent);
         width: 100%;
-        border-top: 2px dashed var(--targetMarker-color);
-      }
-      #targetMarkerColor_${id} {
-        border-top: 2px dashed var(--bar-fill-color);
-      }
+        border-top: 2px dashed var(--bar-color);
       `
     }
 
     // Set title style based on title position
-    let positionTitleStyle
+    let titlePositionStyle
     if (config.title_position == 'inside') {
-      positionTitleStyle = `
+      titlePositionStyle = `
       width: calc(100% - 8px);
-      text-align: center;
-      z-index: 1;
       font-weight: bold;
       color: #FFF;
-      text-shadow: 1px 1px #000;
-      padding-left: 4px;
-      padding-right: 4px;
+      text-shadow: 1px 1px #0007;
       text-overflow: ellipsis;
       overflow: hidden;
       white-space: ${insideWhitespace};
       `
     } else {
-      positionTitleStyle = `
+      titlePositionStyle = `
       color: var(--primary-text-color);
       padding-left: 10px;
       padding-right: 10px;
+      padding-top: 4px;
+      padding-bottom: 4px;
       text-overflow: ellipsis;
       overflow: hidden;
       `      
     }
 
-    // Set CSS styles
-
-    let haCardWidth
-    if (config.columns) {
-      haCardWidth = Math.trunc(100 / Number(config.columns))
-    } else {
-      haCardWidth = 100;
+    let justifyContent
+    let alignItems
+    let textAlign
+    let flexDirection
+    switch (config.align) {
+      case 'right':
+        flexDirection = 'column'
+        textAlign = 'right'
+        alignItems = 'flex-end'
+        justifyContent = 'center'
+        break
+      case 'left':
+        flexDirection = 'column'
+        justifyContent = 'center'
+        alignItems = 'flex-start'
+        textAlign = 'left'
+        break
+      case 'top':
+        flexDirection = 'column'
+        justifyContent = 'flex-start'
+        alignItems = 'center'
+        textAlign = 'center'
+        break
+      case 'top-split':
+        flexDirection = 'row'
+        justifyContent = 'space-between'
+        alignItems = 'flex-start'
+        if (config.show_icon == true) textAlign = 'center'
+        else textAlign = 'left'
+        break
+      case 'bottom':
+        flexDirection = 'column'
+        justifyContent = 'flex-end'
+        alignItems = 'center'
+        textAlign = 'center'
+        break
+      case 'bottom-split':
+        flexDirection = 'row'
+        justifyContent = 'space-between'
+        alignItems = 'flex-end'
+        if (config.show_icon == true) textAlign = 'center'
+        else textAlign = 'left'
+        break
+      case 'split':
+        alignItems = 'center'
+        flexDirection = 'row'
+        justifyContent = 'space-between'
+        if (config.show_icon == true) textAlign = 'center'
+        else textAlign = 'left'
+        break
+      case 'left-split':
+        flexDirection = 'column'
+        justifyContent = 'space-between'
+        alignItems = 'flex-start'
+        break
+      case 'right-split':
+        flexDirection = 'column'
+        justifyContent = 'space-between'
+        alignItems = 'flex-end'
+        textAlign = 'right'
+        break
+      case 'center':
+        flexDirection = 'column'
+        textAlign = 'center'
+        justifyContent = 'center'
+        alignItems = 'center'
+        break
+      case 'center-split':
+        flexDirection = 'column'
+        textAlign = 'center'
+        justifyContent = 'space-between'
+        alignItems = 'center'
     }
+    if (config.title_position != 'inside') textAlign = 'left'
+
+    // Set CSS styles
+    let haCardWidth
+    if (config.columns) haCardWidth = Math.trunc(100 / Number(config.columns))
+    else haCardWidth = 100;
+
     style.textContent = `
-      ha-card {
-        background-color: var(--paper-card-background-color);
+      #card_${id} {
         padding: ${config.padding};
         width: calc(${haCardWidth}% - (${config.padding} * 2));
-        ` + cardStyle + `
+        --card-display: visible;
+        display: var(--card-display);
       }
       #container_${id} {
+        position: relative;
         display: flex;
         align-items: center;
         justify-content: center;
-        ` + flexDirection + `
+        ${titleflexDirection}
       }
       #background_${id} {
+        cursor: pointer;
         position: relative;
         display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
+        flex-direction: var(--flex-direction);
         width: ${config.width};
         height: ${config.height};
-        ` + barStyle + `
       }
-      #title_${id} {
-        ` + positionTitleStyle + `
-        ` + titleStyle + `
-      }
-      #titleBar_${id} {
+      #contentBar_${id} {
         position: relative;
         display: flex;
-        align-items: center;
-        height: 40px;
-        ` + titleAlign + `
-        ` + titleWidth + `
-        ` + titleStyle + `
+        flex-direction: ${flexDirection};
+        align-items: ${alignItems};
+        justify-content: ${justifyContent};
+        --padding: 4px;
+        height: calc(${config.height} - (var(--padding)*2));
+        width: calc(100% - (var(--padding)*2));
+        padding: var(--padding);
       }
-      #bar_${id}, #backgroundBar_${id}, #targetBar_${id}, #targetBarColor_${id}, #valueBar_${id}, #chargeBar_${id}, #chargeBarColor_${id}, #valueBar_${id}, #indicatorBar_${id} {
+      #bar_${id}, #backgroundBar_${id}, #targetBar_${id}, #valueBar_${id}, #chargeBar_${id}, #chargeBarColor_${id}, #valueBar_${id}, #indicatorBar_${id} {
         position: absolute;
         height: 100%;
         width: 100%;
         border-radius: ${config.rounding};
       }
       #backgroundBar_${id} {
-        background: var(--bar-background-color);
+        background: var(--bar-color);
+        filter: brightness(0.5);
+        opacity: 0.25;
+        ${backgroundStyle}
       }
       #bar_${id} {
-        background: linear-gradient(to ${barFrom}, var(--bar-fill-color) var(--bar-percent), #0000 var(--bar-percent), #0000 var(--bar-percent));
+        background: linear-gradient(to ${barFrom}, var(--bar-color) var(--bar-percent), #0000 var(--bar-percent), #0000 var(--bar-percent));
       }
       #chargeBar_${id} {
-        background: linear-gradient(to ${barFrom}, #FFF0 var(--bar-percent), var(--bar-charge-color) var(--bar-percent), var(--bar-charge-color) var(--bar-charge-percent), #FFF0 var(--bar-charge-percent));
+        background: linear-gradient(to ${barFrom}, #FFF0 var(--bar-percent), var(--bar-color) var(--bar-percent), var(--bar-color) var(--bar-charge-percent), #FFF0 var(--bar-charge-percent));
+        filter: var(--bar-charge-brightness);
+        opacity: var(--bar-charge-opacity);
       }
       #targetBar_${id} {
-        background: linear-gradient(to ${barFrom}, #FFF0 var(--targetBar-left-percent), var(--targetBar-color) var(--targetBar-left-percent), var(--targetBar-color) var(--targetBar-right-percent), #FFF0 var(--targetBar-right-percent));
-        mix-blend-mode: difference;
+        display: var(--target-display);
+        filter: brightness(0.66);
+        opacity: 0.33;
+        background: linear-gradient(to ${barFrom}, #FFF0 var(--targetBar-left-percent), var(--bar-color) var(--targetBar-left-percent), var(--bar-color) var(--targetBar-right-percent), #FFF0 var(--targetBar-right-percent));
       }
-      #targetBarColor_${id} {
-        background: linear-gradient(to ${barFrom}, #FFF0 var(--targetBar-left-percent), var(--bar-fill-color) var(--targetBar-left-percent), var(--bar-fill-color) var(--targetBar-right-percent), #FFF0 var(--targetBar-right-percent));
-        mix-blend-mode: color;
+      #targetMarker_${id} {
+        display: var(--target-display);
+        position: absolute;
+        background: #FFF0;
+        ${markerStyle}
+        filter: brightness(0.75);
       }
-      #value_${id} {
-        z-index: 1;
-        //width: 100%;
-        padding-left: 4px;
-        padding-right: 4px;
-        text-align: center;
+      #icon_${id} {
+        display: var(--icon-display);
+        position: relative;
         font-weight: bold;
         color: #FFF;
-        text-shadow: 1px 1px #000;
-        ` + barStyle + `
+        filter: drop-shadow(1px 1px #0005);
+        ${iconStyle}
+      }
+      #title_${id} {
+        position: relative;
+        text-align: ${textAlign};
+        ${titlePositionStyle}
+        ${titleStyle};
+      }
+      #value_${id} {
+        position: relative;
+        font-weight: bold;
+        font-size: 13px;
+        color: #FFF;
+        text-shadow: 1px 1px #0007;
+        white-space: nowrap;
+        ${valueStyle}
+      }
+      #titleBar_${id} {
+        position: relative;
+        display: flex;
+        align-items: center;
+        height: 32px;
+        ${titleAlign}
+        ${titleWidth}
+        ${titleStyle}
       }
       #indicatorBar_${id} {
         display: flex;
+        --flex-direction: row;
+        flex-direction: var(--flex-direction);
         align-items: var(--flex-align);
-        justify-content: var(--flex-justify);
+        justify-content: var(--justify-content);
       }
-      #indicator_${id}, #indicatorColor_${id} {
-        width: 25px;
-        text-align: center;
-        position: static;
-        mix-blend-mode: difference;
-        color: #7F7F7F;
-        opacity: 0.75;
-        text-shadow: 0px 0px;
-        ` + indicatorStyle + `
-      }
-      #indicatorColor_${id} {
-        margin-left: -25px;
-        color: var(--bar-fill-color);
-        mix-blend-mode: color;
-        opacity: 1;
-        ` + indicatorStyle + `
+      #indicator_${id} {
+        position: relative;
+        filter: brightness(0.75);
+        color: var(--bar-color);
+        --padding-left: 0px;
+        padding-left: var(--padding-left);
+        --padding-right: 0px;
+        padding-right: var(--padding-right);
       }
       #indicatorContainer_${id} {
+        position: relative;
         display: flex;
-        margin-top: 5px;
-        margin-bottom: 5px;
+        align-items: center;
+        justify-content: center;
       }
-      ` + markerStyle + `
     `
     return style
   }
@@ -435,40 +540,96 @@ class BarCard extends HTMLElement {
   }
 
   // Translates entity percentage to bar percentage
-  _translatePercent (value, min, max) {
-    return 100 * (value - min) / (max - min)
+  _translatePercent (value, min, max, index, entity) {
+    const config = this._configAttributeCheck(entity, index)
+    switch (config.direction) {
+      case 'right-reverse':
+      case 'left-reverse':
+      case 'up-reverse':
+      case 'down-reverse':
+        return 100 - (100 * (value - min) / (max - min))
+      default:
+        return 100 * (value - min) / (max - min)
+    }
   }
 
   // Map range function
-  _scale (num, in_min, in_max, out_min, out_max) {
+  _mapRange (num, in_min, in_max, out_min, out_max) {
     return (num - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
   }
 
-  // Returns hue value based on severity array
+  // Returns color based on severity array
   _computeSeverity (stateValue, sections) {
     let numberValue = Number(stateValue)
-    let hue
+    let color
     sections.forEach(section => {
-      if (numberValue <= section.value && !hue) {
-        hue = section.hue
+      if (numberValue <= section.value && !color) {
+        color = section.color
       }
     })
-    return hue
+    return color
   }
 
   // Check if value is NaN, otherwise assume it's an entity
   _valueEntityCheck (value, hass) {
     if (isNaN(value)) {
-      if (hass.states[value] == undefined) throw new Error('Invalid target, min or max entity')
-      else return hass.states[value].state
+      const valueArray = value.split('.')
+      if (valueArray[2] == 'attributes') {
+        if (this._hass.states[valueArray[0]+'.'+valueArray[1]] == undefined) {
+          throw new Error('Invalid target, min or max entity')
+        } else {
+          const hassObject = hass.states[valueArray[0]+'.'+valueArray[1]]
+          const attributes = hassObject[valueArray[2]]
+          const attribute = attributes[valueArray[3]]
+          return attribute
+        }
+      } else {
+        if (this._hass.states[value] == undefined) throw new Error('Invalid target, min or max entity')
+        else return hass.states[value].state
+      }
     } else {
       return value
     }
   }
 
+  // Check if min is defined otherwise check for min attribute
+  _minCheck (entity, hass, index) {
+    const config = this._configAttributeCheck(entity, index)
+    if (config.min == undefined) {
+      if (hass.states[entity] != undefined) {
+        if (hass.states[entity].attributes.min) return hass.states[entity].attributes.min
+        else return 0
+      } else {
+        return 0
+      }
+    } else {
+      return config.min
+    }
+  }
+
+  // Check if max is defined otherwise check for max attribute
+  _maxCheck (entity, hass, index) {
+    const config = this._configAttributeCheck(entity, index)
+    if (config.max == undefined) {
+      if (hass.states[entity] != undefined) {
+        if (hass.states[entity].attributes.max) return hass.states[entity].attributes.max
+        else return 100
+      } else {
+        return 100
+      }
+    } else {
+      return config.max
+    }
+  }
+
+  _serviceCall (domain, service, data) {
+    const hass = this._hass
+    hass.callService(domain, service, data)
+  }
+
   // Press action
   _showAttributes (type, detail, options) {
-    const node = this.shadowRoot
+    const root = this.shadowRoot
     options = options || {}
     detail = (detail === null || detail === undefined) ? {} : detail
     const event = new Event(type, {
@@ -477,29 +638,34 @@ class BarCard extends HTMLElement {
       composed: options.composed === undefined ? true : options.composed
     })
     event.detail = detail
-    node.dispatchEvent(event)
+    root.dispatchEvent(event)
     return event
   }
 
   // Update bar percentages
-  _updateBar (entityState, hass, id) {
-    const config = this._config
-    const root = this.shadowRoot
-    if (this._valueEntityCheck(config.min, hass) !== undefined && this._valueEntityCheck(config.max, hass) !== undefined) {
-      root.getElementById('bar_'+id).style.setProperty('--bar-percent', `${this._translatePercent(entityState, this._valueEntityCheck(config.min, hass), this._valueEntityCheck(config.max, hass))}%`)
-      root.getElementById('bar_'+id).style.setProperty('--bar-charge-percent', `${this._translatePercent(entityState, this._valueEntityCheck(config.min, hass), this._valueEntityCheck(config.max, hass))}%`)
-    }
+  _updateBar (entityState, hass, id, entity, index) {
+    const minValue = this._valueEntityCheck(this._minCheck(entity, hass, index), hass)
+    const maxValue = this._valueEntityCheck(this._maxCheck(entity, hass, index), hass)
+    const barElement = this.shadowRoot.getElementById('bar_'+id)
+
+    barElement.style.setProperty('--bar-percent', `${this._translatePercent(entityState, minValue, maxValue, index, entity)}%`)
+    barElement.style.setProperty('--bar-charge-percent', `${this._translatePercent(entityState, minValue, maxValue, index, entity)}%`)
   }
 
   // Create animation
-  _updateAnimation (entityState, configDirection, configDuration, hue, configStop, id) {
-    const config = this._config
+  _updateAnimation (entityState, configDuration, configStop, id, entity, index) {
+    const config = this._configAttributeCheck(entity, index)
     const root = this.shadowRoot
+    const hass = this._hass
     const element = root.getElementById('chargeBar_'+id)
+    let configDirection = this._animationDirection[id]
 
-    let currentPercent = this._translatePercent(entityState, this._valueEntityCheck(config.min, this._hass), this._valueEntityCheck(config.max, this._hass))
-    let totalFrames = ((currentPercent) * 10) + (config.delay / (config.speed / 250))
-    let scaledPercent = (currentPercent) * 10
+    const minValue = this._valueEntityCheck(this._minCheck(entity, hass, index), hass)
+    const maxValue = this._valueEntityCheck(this._maxCheck(entity, hass, index), hass)
+
+    let currentPercent = this._translatePercent(entityState, minValue, maxValue, index, entity)
+    let totalFrames = currentPercent * 3 + (config.delay / (config.speed / 250) / 3)
+    let scaledPercent = currentPercent * 3
 
     if (configStop == true) {
       configDuration = 0
@@ -515,296 +681,366 @@ class BarCard extends HTMLElement {
       fill: 'both'
     }
 
+    switch (config.direction) {
+      case 'left-reverse':
+      case 'right-reverse':
+      case 'up-reverse':
+      case 'down-reverse':
+        if (configDirection == 'normal') configDirection = 'reverse'
+        else configDirection = 'normal'
+    }
     let keyframes = []
     let i = scaledPercent
     if (configDirection == 'normal') {
       for (; i <= totalFrames;) {
-        let opacity = this._scale(i / 10, currentPercent, currentPercent + 25, 1, 0)
-        let keyframe = {'--bar-charge-percent': i / 10 + '%', '--bar-percent': currentPercent + '%', '--bar-charge-color': 'hsla(' + hue + ', 75%, 25%, ' + opacity + ')'}
+        let opacity = this._mapRange(i / 3, currentPercent, currentPercent + 25, 0.5, 0)
+        let keyframe = {'--bar-charge-percent': i / 3 + '%', '--bar-percent': currentPercent + '%', '--bar-charge-opacity': opacity}
         keyframes.push(keyframe)
         i++
       }
+      element.style.setProperty('--bar-charge-brightness','brightness(1)')
     }
     if (configDirection == 'reverse') {
       for (; i <= totalFrames;) {
-        const reversePercent = currentPercent - ((i - scaledPercent) / 10)
-        let opacity = this._scale(i / 10, currentPercent, currentPercent + 25, 1, 0)
-        let keyframe = {'--bar-charge-percent': currentPercent + '%', '--bar-percent': reversePercent + '%', '--bar-charge-color': 'hsla(' + hue + ', 75%, 25%, ' + opacity + ')'}
+        const reversePercent = currentPercent - ((i - scaledPercent) / 3)
+        let opacity = this._mapRange(i / 3, currentPercent, currentPercent + 25, 0.5, 0)
+        let keyframe = {'--bar-charge-percent': currentPercent + '%', '--bar-percent': reversePercent + '%', '--bar-charge-opacity': opacity}
         keyframes.push(keyframe)
         i++
       }
+      element.style.setProperty('--bar-charge-brightness','brightness(0.25)')
     }
-    return element.animate(keyframes, options)
+    const animation = element.animate(keyframes, options)
+    animation.id = id
+    return animation
   }
 
   // Sets position and direction of the indicator
-  _updateIndicator (position, direction, id) {
-    const config = this._config
+  _updateIndicator (config, position, direction, id, color) {
     const root = this.shadowRoot
-    switch (position) {
-      case 'right':
-        root.getElementById('indicatorBar_'+id).style.setProperty('--flex-align', 'center')
-        root.getElementById('indicatorBar_'+id).style.setProperty('--flex-justify', 'flex-end')
-        break
-      case 'left':
-        root.getElementById('indicatorBar_'+id).style.setProperty('--flex-align', 'center')
-        root.getElementById('indicatorBar_'+id).style.setProperty('--flex-justify', 'flex-start')
-        break
-      case 'top':
-        root.getElementById('indicatorBar_'+id).style.setProperty('--flex-align', 'flex-start')
-        root.getElementById('indicatorBar_'+id).style.setProperty('--flex-justify', 'center')
-        break
-      case 'bottom':
-        root.getElementById('indicatorBar_'+id).style.setProperty('--flex-align', 'flex-end')
-        root.getElementById('indicatorBar_'+id).style.setProperty('--flex-justify', 'center')
-        break
-      case 'auto':
-        switch (direction) {
-          case 'up':
-            root.getElementById('indicatorBar_'+id).style.setProperty('--flex-align', 'center')
-            root.getElementById('indicatorBar_'+id).style.setProperty('--flex-justify', 'flex-end')
+    const indicatorElement = root.getElementById('indicator_'+id)
+    const indicatorBarElement = root.getElementById('indicatorBar_'+id)
+
+    indicatorElement.style.setProperty('--bar-color', color)
+
+    switch (direction) {
+      case 'up':
+        indicatorElement.textContent = '▲'
+        switch (position) {
+          case 'left':
+            indicatorElement.style.setProperty('--padding-left','4px')
             break
-          case 'down':
-            root.getElementById('indicatorBar_'+id).style.setProperty('--flex-align', 'center')
-            root.getElementById('indicatorBar_'+id).style.setProperty('--flex-justify', 'flex-start')
+          case 'right':
+          case 'auto':
+            root.getElementById('background_'+id).style.setProperty('--flex-direction','row-reverse')
+            switch (config.align) {
+              case 'center':
+              case 'center-split':
+              case 'left-split':
+              case 'right-split':
+                indicatorBarElement.style.setProperty('--justify-content','flex-end')
+            }
+            indicatorElement.style.setProperty('--padding-right','4px')
+            indicatorElement.style.setProperty('--padding-left','0px')
             break
+          case 'top':
+          case 'auto-vertical':
+            indicatorBarElement.style.setProperty('--justify-content','flex-start')
+            indicatorBarElement.style.setProperty('--flex-direction','column')
+            break
+          case 'bottom':
+            indicatorBarElement.style.setProperty('--justify-content','flex-end')
+            indicatorBarElement.style.setProperty('--flex-direction','column')
         }
         break
-      case 'auto-vertical':
-        switch (direction) {
-          case 'up':
-            root.getElementById('indicatorBar_'+id).style.setProperty('--flex-align', 'flex-start')
-            root.getElementById('indicatorBar_'+id).style.setProperty('--flex-justify', 'center')
+      case 'down':
+        indicatorElement.textContent = '▼'
+        switch (position) {
+          case 'right':
+            root.getElementById('background_'+id).style.setProperty('--flex-direction','row-reverse')
+            indicatorElement.style.setProperty('--padding-right','4px')
+            indicatorElement.style.setProperty('--padding-left','0px')
             break
-          case 'down':
-            root.getElementById('indicatorBar_'+id).style.setProperty('--flex-align', 'flex-end')
-            root.getElementById('indicatorBar_'+id).style.setProperty('--flex-justify', 'center')
+          case 'left':
+          case 'auto':
+            root.getElementById('background_'+id).style.setProperty('--flex-direction','row')
+            switch (config.align) {
+              case 'center':
+              case 'center-split':
+              case 'left-split':
+              case 'right-split':
+                indicatorBarElement.style.setProperty('--justify-content','flex-start')
+            }
+            indicatorElement.style.setProperty('--padding-left','4px')
+            indicatorElement.style.setProperty('--padding-right','0px')
             break
+          case 'bottom':
+          case 'auto-vertical':
+            indicatorBarElement.style.setProperty('--justify-content','flex-end')
+            indicatorBarElement.style.setProperty('--flex-direction','column')
+          case 'top':
+            indicatorBarElement.style.setProperty('--justify-content','flex-start')
+            indicatorBarElement.style.setProperty('--flex-direction','column')  
         }
-    }
-    if (config.indicator != 'off') {
-      switch (direction) {
-        case 'up':
-          root.getElementById('indicator_'+id).textContent = '▲'
-          root.getElementById('indicatorColor_'+id).textContent = '▲'
-          break
-        case 'down':
-          root.getElementById('indicator_'+id).textContent = '▼'
-          root.getElementById('indicatorColor_'+id).textContent = '▼'
-          break
-      }
+        break
+      case 'off':
+        indicatorElement.textContent = ''
+        indicatorElement.style.setProperty('--padding-left','0px')
+        indicatorElement.style.setProperty('--padding-right','0px')
     }
   }
 
   // Scale the target bar size
-  _updateTargetBar (entityState, target, color, markerColor, id) {
-    const config = this._config
+  _updateTargetBar (entityState, target, color, id, entity, index) {
+    const config = this._configAttributeCheck(entity, index)
     const root = this.shadowRoot
-
-    let currentPercent = this._translatePercent(entityState, this._valueEntityCheck(config.min, this._hass), this._valueEntityCheck(config.max, this._hass))
-    let targetPercent = this._translatePercent(target, this._valueEntityCheck(config.min, this._hass), this._valueEntityCheck(config.max, this._hass))
-
-    let initialPercent
-    let diffPercent
-    if (currentPercent > targetPercent) {
-      initialPercent = targetPercent
-      diffPercent = currentPercent
+    const targetBarElement = root.getElementById('targetBar_'+id)
+    const targetMarkerElement = root.getElementById('targetMarker_'+id)
+    if (config.target !== false) {
+      const hass = this._hass
+      const minValue = this._valueEntityCheck(this._minCheck(entity, hass, index), hass, index)
+      const maxValue = this._valueEntityCheck(this._maxCheck(entity, hass, index), hass, index)
+      let currentPercent = this._translatePercent(entityState, minValue, maxValue, index, entity)
+      let targetPercent = this._translatePercent(target, minValue, maxValue, index, entity)
+      let initialPercent
+      let diffPercent    
+      if (currentPercent > targetPercent) {
+        initialPercent = targetPercent
+        diffPercent = currentPercent
+      } else {
+        initialPercent = currentPercent
+        diffPercent = targetPercent
+      }
+      targetBarElement.style.setProperty('--targetBar-left-percent', initialPercent + '%')
+      targetBarElement.style.setProperty('--targetBar-right-percent', diffPercent + '%')
+      targetBarElement.style.setProperty('--bar-color', color)
+      targetMarkerElement.style.setProperty('--targetMarker-percent', targetPercent + '%')
+      targetMarkerElement.style.setProperty('--bar-color', color)
     } else {
-      initialPercent = currentPercent
-      diffPercent = targetPercent
+      targetBarElement.style.setProperty('--target-display', 'none')
+      targetMarkerElement.style.setProperty('--target-display', 'none')
     }
-    root.getElementById('targetBar_'+id).style.setProperty('--targetBar-left-percent', initialPercent + '%')
-    root.getElementById('targetBarColor_'+id).style.setProperty('--targetBar-left-percent', initialPercent + '%')
-    root.getElementById('targetBar_'+id).style.setProperty('--targetBar-right-percent', diffPercent + '%')
-    root.getElementById('targetBarColor_'+id).style.setProperty('--targetBar-right-percent', diffPercent + '%')
-    root.getElementById('targetBar_'+id).style.setProperty('--targetBar-color', color)
-
-    root.getElementById('targetMarker_'+id).style.setProperty('--targetMarker-percent', targetPercent + '%')
-    root.getElementById('targetMarkerColor_'+id).style.setProperty('--targetMarker-percent', targetPercent + '%')
-    root.getElementById('targetMarker_'+id).style.setProperty('--targetMarker-color', markerColor)
   }
 
-  _updateEntity (entity, id) {
-    const config = this._config
-    const root = this.shadowRoot
-    const hass = this._hass
-    if (!config.entity) {
-      config.title = hass.states[entity].attributes.friendly_name
+  _calculateBarColor (config, entityState) {
+    let barColor
+    if (config.severity == false) {
+      barColor = config.color  
+    } else {
+      barColor = this._computeSeverity(entityState, config.severity)
     }
+    return barColor
+  }
 
-    root.getElementById('title_'+id).textContent = config.title
+  // Check entity attribute overrides
+  _configAttributeCheck (entity, index) {
+    const hass = this._hass
+    const config = Object.assign({}, this._configArray[index])
+    const entityAttributes = hass.states[entity].attributes
+    if (config.entity_config == true) {
+      Object.keys(config).forEach(section => {
+        if (this._initialConfigArray[index][section] == undefined) {
+          if (entityAttributes[section] !== undefined) {
+            if (section == 'severity' && typeof(entityAttributes[section]) == 'string') config[section] = JSON.parse(entityAttributes[section])
+            else config[section] = entityAttributes[section]
+          }
+        }
+      })
+    }
+    return config  
+  }
 
+  // On entity update
+  _updateEntity (entity, id, index) {
+    const hass = this._hass
+    const entityObject = hass.states[entity]
+
+    if (entityObject == undefined) throw new Error(entity + " doesn't exist.")
+
+    const config = this._configAttributeCheck(entity, index)
+    const root = this.shadowRoot
+
+    if (config.title == false) config.title = entityObject.attributes.friendly_name
+
+    if (config.show_icon == true) {
+      if (config.icon == false) root.getElementById('icon_'+id).icon = entityObject.attributes.icon
+      else root.getElementById('icon_'+id).icon = config.icon
+    } else {
+      root.getElementById('icon_'+id).style.setProperty('--icon-display', 'none')
+    }
+    if (config.title_position != 'off') root.getElementById('title_'+id).textContent = config.title
     if (!this._entityState) this._entityState = []
 
     // Define variables that have possible entities
     let configTarget
-    if (config.target) configTarget = this._valueEntityCheck(config.target, hass)
-    const configMin = this._valueEntityCheck(config.min, hass)
-    const configMax = this._valueEntityCheck(config.max, hass)
+    if (config.target != false) configTarget = this._valueEntityCheck(config.target, hass)
+    const configMin = this._valueEntityCheck(this._minCheck(entity, hass, index), hass)
+    const configMax = this._valueEntityCheck(this._maxCheck(entity, hass, index), hass)
 
     // Check for unknown state
     let entityState
-    if (hass.states[entity] == undefined || hass.states[entity].state == 'unknown') {
+    if (entityObject == undefined || entityObject.state == 'unknown') {
       entityState = 'N/A'
     } else {
-      if (config.attribute) {
-        entityState = hass.states[entity].attributes[config.attribute]
+      if (config.attribute != false) {
+        entityState = entityObject.attributes[config.attribute]
       } else {
-        entityState = hass.states[entity].state
+        entityState = entityObject.state
       }
       if (!isNaN(entityState)) {
       entityState = Math.min(entityState, configMax)
       entityState = Math.max(entityState, configMin)
       }
     }
+
+    // Set measurement
     let measurement
-    if (hass.states[entity] == undefined || hass.states[entity].state == 'unknown') measurement = ''
-    else if (config.unit_of_measurement) measurement = config.unit_of_measurement
-    else measurement = hass.states[entity].attributes.unit_of_measurement || ''
-
-    // Set color hue
-    let hue
-    if (!config.severity) {
-      hue = 220
-      if (config.hue) {
-        hue = config.hue
-      }
-    } else {
-      hue = this._computeSeverity(entityState, config.severity)
-    }
-
-    // Set style variables
-    const barColor = 'hsl(' + hue + ',' + config.saturation + ',50%)'
-    const targetColor = 'hsla(' + hue + ',' + config.saturation + ',50%,0.25)'
-    const targetMarkerColor = 'hsla(' + hue + ',' + config.saturation + ',50%,0.5)'
-    const backgroundColor = 'hsla(' + hue + ',' + config.saturation + ',15%,0.5)'
+    if (entityObject == undefined || entityObject.state == 'unknown') measurement = ''
+    else if (config.unit_of_measurement !== false) measurement = config.unit_of_measurement
+    else measurement = entityObject.attributes.unit_of_measurement || ''
 
     // Define target, min and max if not defined
     if (!this._entityTarget) this._entityTarget = {}
     if (!this._currentMin) this._currentMin = {}
     if (!this._currentMax) this._currentMax = {}
 
+    // Defined elements
+    const barElement = root.getElementById('bar_'+id)
+
+    // Define global currentAnimation
+    if (!this._currentAnimation) this._currentAnimation = {}
+    if (!this._animationDirection) this._animationDirection = {}
+
+    // Define chargeEntityState
+    let chargeEntityState
+    if (config.charge_entity !== false) chargeEntityState = hass.states[config.charge_entity].state
+
     // On entity update
     if (entityState !== this._entityState[id]) {
-      this._updateBar(entityState, hass, id)
-      if (config.target) {
-        this._updateTargetBar(entityState, configTarget, targetColor, targetMarkerColor, id)
-        this._entityTarget[id] = configTarget
-      }
-      root.getElementById('bar_'+id).style.setProperty('--bar-fill-color', barColor)
-      root.getElementById('backgroundBar_'+id).style.setProperty('--bar-background-color', backgroundColor)
-      if (config.indicator != 'off') root.getElementById('indicatorColor_'+id).style.setProperty('--bar-fill-color', barColor)
-      if (config.target) {
-        root.getElementById('targetBarColor_'+id).style.setProperty('--bar-fill-color', barColor)
-        root.getElementById('targetMarkerColor_'+id).style.setProperty('--bar-fill-color', barColor)
-      }
-      root.getElementById('value_'+id).textContent = `${entityState} ${measurement}`
-    }
+      const barColor = this._calculateBarColor(config, entityState)
 
-    if (!this._currentAnimation) this._currentAnimation = {}
-    // Select 'auto' animation
-    if (config.animation == 'auto') {
-      if (entityState > this._entityState[id]) {
-        this._updateIndicator(config.indicator, 'up', id)
-        this._currentAnimation[id] = this._updateAnimation(entityState, 'normal', config.delay, hue, false, id)
-      }
-      if (entityState < this._entityState[id]) {
-        this._updateIndicator(config.indicator, 'down', id)
-        this._currentAnimation[id] = this._updateAnimation(entityState, 'reverse', config.delay, hue, false, id)
-      }
-      if (entityState == configMax || entityState == configMin) {
-        if (config.indicator != 'off') {
-          root.getElementById('indicator_'+id).textContent = ''
-          root.getElementById('indicatorColor_'+id).textContent = ''
+      if (config.visibility !== false) {
+        if (entityState == 'N/A' || config.visibility == true) {
+          root.getElementById('card_'+id).style.setProperty('--card-display', 'visible')
+        } else {
+          if (eval(entityState + " " + config.visibility)) {
+            root.getElementById('card_'+id).style.setProperty('--card-display', 'visible')
+          } else {
+            root.getElementById('card_'+id).style.setProperty('--card-display', 'none')
+          }
         }
-        if (entityState == configMax) {
-          root.getElementById('bar_'+id).style.setProperty('--bar-percent', '100%')
-          root.getElementById('bar_'+id).style.setProperty('--bar-fill-color', barColor)
-          root.getElementById('bar_'+id).style.setProperty('--bar-charge-percent', '100%')
+      }
+      this._updateBar(entityState, hass, id, entity, index)
+      this._updateTargetBar(entityState, configTarget, barColor, id, entity, index)
+      this._entityTarget[id] = configTarget
+      barElement.style.setProperty('--bar-color', barColor)
+      if (config.show_value == true) root.getElementById('value_'+id).textContent = `${entityState} ${measurement}`
+      if (config.animation !== 'off') root.getElementById('chargeBar_'+id).style.setProperty('--bar-color', barColor)
+      if (entityState == 'N/A') root.getElementById('backgroundBar_'+id).style.setProperty('--bar-color', '#666')
+      else root.getElementById('backgroundBar_'+id).style.setProperty('--bar-color', barColor)
+
+      if (config.indicator !== 'off') {
+        if (entityState > this._entityState[id]) this._updateIndicator(config, config.indicator, 'up', id, barColor)
+        if (entityState < this._entityState[id]) this._updateIndicator(config, config.indicator, 'down', id, barColor)
+      }
+
+      // Animation is auto
+      if (config.animation == 'auto') {
+        const barColor = this._calculateBarColor(config, entityState)
+        if (entityState > this._entityState[id]) {
+          this._animationDirection[id] = 'normal'
           if (this._currentAnimation[id]) {
             this._currentAnimation[id].pause()
           }
+          this._currentAnimation[id] = this._updateAnimation(entityState, config.delay, false, id, entity, index)
         }
-        if (entityState == configMin) {
-          root.getElementById('bar_'+id).style.setProperty('--bar-percent', '0%')
-          root.getElementById('bar_'+id).style.setProperty('--bar-charge-percent', '0%')
+        if (entityState < this._entityState[id]) {
+          this._animationDirection[id] = 'reverse'
           if (this._currentAnimation[id]) {
             this._currentAnimation[id].pause()
           }
+          this._currentAnimation[id] = this._updateAnimation(entityState, config.delay, false, id, entity, index)
         }
-      }
-    }
-
-    // Select 'charge' animation
-    if (config.animation == 'charge') {
-      let chargeEntityState
-      if (!config.charge_entity) {
-        entityState = "define 'charge_entity'"
-        measurement = ''
-        root.getElementById('value').style.setProperty('color', '#FF0000')
-      } else {
-        chargeEntityState = hass.states[config.charge_entity].state
-      }
-      switch (chargeEntityState) {
-        case "charging":
-        case "on":
-        case "true":
-          this._updateIndicator(config.indicator, 'up', id)
-          if (!this._currentAnimation || chargeEntityState != this._currentChargeState || entityState > this._entityState[id]) {
-            this._currentChargeState = chargeEntityState
-            this._currentAnimation = this._updateAnimation(entityState, 'normal', config.delay, hue, false, id)
-          }
-          break
-        case "discharging":
-        case "off":
-        case "false":
-          if (chargeEntityState == 'discharging' || chargeEntityState == 'off' || chargeEntityState == 'false') {
-            this._updateIndicator(config.indicator, 'down', id)   
-            if (!this._currentAnimation || chargeEntityState != this._currentChargeState || entityState < this._entityState[id]) {
-              this._currentChargeState = chargeEntityState
-              this._currentAnimation = this._updateAnimation(entityState, 'reverse', config.delay, hue, false, id)
+        if (entityState == configMax || entityState == configMin) {
+          if (entityState == configMax) {
+            barElement.style.setProperty('--bar-color', barColor)
+            if (config.indicator !== 'off') this._updateIndicator(config, config.indicator, 'off', id, barColor)
+            if (this._currentAnimation[id]) {
+              this._currentAnimation[id].pause()
             }
           }
-          break
+          if (entityState == configMin) {
+            if (config.indicator !== 'off') this._updateIndicator(config, config.indicator, 'off', id, barColor)
+            if (this._currentAnimation[id]) {
+              this._currentAnimation[id].pause()
+            }
+          }
+        }
       }
-    }
+    } 
 
-    // Select 'off' animation
-    if (config.animation == "off") {
-      if (entityState > this._entityState[id]) {
-        this._updateIndicator(config.indicator, 'up', id)
+    // Animation is charge
+    if (config.charge_entity !== false) {
+      if (!this._currentChargeState) this._currentChargeState = {}
+      if (this._currentChargeState[id] !== chargeEntityState || entityState !== this._entityState[id]) {
+        const barColor = this._calculateBarColor(config, entityState)
+        switch (chargeEntityState) {
+          case "charging":
+          case "on":
+          case "true":
+            if (config.indicator !== 'off') this._updateIndicator(config, config.indicator, 'up', id, barColor)
+            if (!this._currentAnimation[id] || chargeEntityState != this._currentChargeState || entityState > this._entityState[id]) {
+              this._currentChargeState[id] = chargeEntityState
+              this._animationDirection[id] = 'normal'
+              this._currentAnimation[id] = this._updateAnimation(entityState, config.delay, false, id, entity, index)
+            }
+            break
+          case "discharging":
+          case "off":
+          case "false":
+            if (config.indicator !== 'off') this._updateIndicator(config, config.indicator, 'down', id, barColor)   
+            if (!this._currentAnimation[id] || chargeEntityState != this._currentChargeState || entityState < this._entityState[id]) {
+              this._currentChargeState[id] = chargeEntityState
+              this._animationDirection[id] = 'reverse'
+              this._currentAnimation[id] = this._updateAnimation(entityState, config.delay, false, id, entity, index)
+            }
+            break
+        }
       }
-      if (entityState < this._entityState[id]) {
-        this._updateIndicator(config.indicator, 'down', id)
-      } 
     }
     
     // On target update
-    if (config.target) {
+    if (config.target != false) {
       if (configTarget != this._entityTarget[id]) {
-        this._updateTargetBar(entityState, configTarget, targetColor, targetMarkerColor, id)
+        const barColor = this._calculateBarColor(config, entityState)
+        this._updateTargetBar(entityState, configTarget, barColor, id, entity, index)
         this._entityTarget[id] = configTarget
+        if (this._currentAnimation[id] && config.animation !== 'off') this._currentAnimation[id] = this._updateAnimation(entityState, config.delay, false, id, entity, index)
       }
     }
-
+    
     // On min update
-    if (configMin !== this._currentMin) {
-      this._updateBar(entityState, hass, id)
+    if (configMin !== this._currentMin[id]) {
+      this._updateBar(entityState, hass, id, entity, index)
       this._currentMin[id] = configMin
-      if (config.target) {
-        this._updateTargetBar(entityState, configTarget, targetColor, targetMarkerColor, id)
+      if (config.target != false) {
+        const barColor = this._calculateBarColor(config, entityState)
+        this._updateTargetBar(entityState, configTarget, barColor, id, entity, index)
         this._currentMin[id] = configMin
       }
+      if (this._currentAnimation[id] && config.animation !== 'off') this._currentAnimation[id] = this._updateAnimation(entityState, config.delay, false, id, entity, index)
     }
 
     // On max update
-    if (configMax !== this._currentMax) {
-      this._updateBar(entityState, hass, id)
+    if (configMax !== this._currentMax[id]) {
+      this._updateBar(entityState, hass, id, entity, index)
       this._currentMax[id] = configMax
-      if (config.target) {
-        this._updateTargetBar(entityState, configTarget, targetColor, targetMarkerColor, id)
+      if (config.target != false) {
+        const barColor = this._calculateBarColor(config, entityState)
+        this._updateTargetBar(entityState, configTarget, barColor, id, entity, index)
         this._currentMax[id] = configMax
       }
+      if (this._currentAnimation[id] && config.animation !== 'off') this._currentAnimation[id] = this._updateAnimation(entityState, config.delay, false, id, entity, index)
     }
     this._entityState[id] = entityState
   }
