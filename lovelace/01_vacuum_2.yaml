@@ -260,30 +260,67 @@ cards:
       - type: custom:button-card
         entity: input_boolean.vacuum_auto_day0
         icon: mdi:alpha-l-box-outline
+        color: rgb(30, 30, 30)
+        show_name: false
       - type: custom:button-card
         entity: input_boolean.vacuum_auto_day1
         icon: mdi:alpha-m-box-outline
+        color: rgb(30, 30, 30)
+        show_name: false
       - type: custom:button-card
         entity: input_boolean.vacuum_auto_day2
         icon: mdi:alpha-x-box-outline
+        color: rgb(30, 30, 30)
+        show_name: false
       - type: custom:button-card
         entity: input_boolean.vacuum_auto_day3
         icon: mdi:alpha-j-box-outline
+        color: rgb(30, 30, 30)
+        show_name: false
       - type: custom:button-card
         entity: input_boolean.vacuum_auto_day4
         icon: mdi:alpha-v-box-outline
+        color: rgb(30, 30, 30)
+        show_name: false
       - type: custom:button-card
         entity: input_boolean.vacuum_auto_day5
         icon: mdi:alpha-s-box-outline
+        color: rgb(30, 30, 30)
+        show_name: false
       - type: custom:button-card
         entity: input_boolean.vacuum_auto_day6
         icon: mdi:alpha-d-box-outline
-#    - type: custom:fold-entity-row
-#      items:
-#      - group.vacuum_msg
-#      - type: divider
-#      - type: custom:time-input-row
-#        entity: input_datetime.vacuum_auto_hour
+        color: rgb(30, 30, 30)
+        show_name: false
+
+    - type: entities
+      entities:
+      - type: divider
+      - input_number.vacuum_manual_passes
+      - input_select.vacuum_fan_speed
+    - type: horizontal-stack
+      cards:
+      - type: custom:button-card
+        entity: input_boolean.vacuum_zone_diningroom
+        name: Comedor
+        color: rgb(30, 30, 30)
+        icon: mdi:silverware
+      - type: custom:button-card
+        entity: input_boolean.vacuum_zone_bedrooms
+        name: Dormitorios
+        color: rgb(30, 30, 30)
+        icon: mdi:hotel
+      - type: custom:button-card
+        entity: input_boolean.vacuum_zone_kitchen
+        name: Cocina
+        color: rgb(30, 30, 30)
+        icon: mdi:stove
+      - type: custom:button-card
+        entity: input_boolean.vacuum_zone_office
+        name: Despacho
+        color: rgb(30, 30, 30)
+        icon: mdi:briefcase
+
 
 popup_cards:
   group.vacuum_msg:

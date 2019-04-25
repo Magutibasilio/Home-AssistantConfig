@@ -5,20 +5,6 @@ cards:
     cards:
       - type: conditional
         conditions:
-          - entity: media_player.samsung_tv_remote
-            state_not: "unavailable" 
-        card:
-          type: media-control
-          entity: media_player.samsung_tv_remote
-      - type: conditional
-        conditions:
-          - entity: media_player.samsung_led46_ue46f7000
-            state_not: "unavailable" 
-        card:
-          type: media-control
-          entity: media_player.samsung_led46_ue46f7000
-      - type: conditional
-        conditions:
           - entity: media_player.samsung_46f7000
             state_not: "unavailable" 
         card:
@@ -26,18 +12,25 @@ cards:
           entity: media_player.samsung_46f7000
       - type: conditional
         conditions:
-          - entity: media_player.comedor
+          - entity: media_player.alexa_comedor
             state_not: "unavailable"
         card:
           type: media-control
-          entity: media_player.comedor
+          entity: media_player.alexa_comedor
       - type: conditional
         conditions:
-          - entity: media_player.chromecast
+          - entity: media_player.alexa_dormitorio
+            state_not: "unavailable"
+        card:
+          type: media-control
+          entity: media_player.alexa_dormitorio
+      - type: conditional
+        conditions:
+          - entity: media_player.chromecast_dormitorio
             state_not: "unavailable" 
         card:
           type: media-control
-          entity: media_player.chromecast
+          entity: media_player.chromecast_dormitorio
       - type: conditional
         conditions:
           - entity: media_player.mibox_ania
@@ -45,13 +38,6 @@ cards:
         card:
           type: media-control
           entity: media_player.mibox_ania
-      - type: conditional
-        conditions:
-          - entity: media_player.mibox_ania_2
-            state_not: "unavailable"
-        card:
-          type: media-control
-          entity: media_player.mibox_ania_2
       - type: conditional
         conditions:
           - entity: media_player.xiaomi_gateway_radio
@@ -66,83 +52,41 @@ cards:
         title: Transcodificacion
         show_header_toggle: false
         entities:
-          - sensor.process_ffmpeg
-          - sensor.ffmpeg_cpu
+          - sensor.ffmpeg_cpu_template
       - type: conditional
         conditions:
-          - entity: media_player.emby_samsung_tv_samsung_ue46f7000
+          - entity: media_player.plex_samsung_46f7000
             state_not: "unavailable" 
         card:
           type: media-control
-          entity: media_player.emby_samsung_tv_samsung_ue46f7000
+          entity: media_player.plex_samsung_46f7000
       - type: conditional
         conditions:
-          - entity: media_player.emby_emby_for_chromecast_chromecast
+          - entity: media_player.emby_samsung_46f7000
             state_not: "unavailable" 
         card:
           type: media-control
-          entity: media_player.emby_emby_for_chromecast_chromecast
+          entity: media_player.emby_samsung_46f7000
       - type: conditional
         conditions:
-          - entity: media_player.emby_androidtv_mibox_ania
+          - entity: media_player.emby_op3_jcc
             state_not: "unavailable" 
         card:
           type: media-control
-          entity: media_player.emby_androidtv_mibox_ania
+          entity: media_player.emby_op3_jcc
       - type: conditional
         conditions:
-          - entity: media_player.emby_emby_for_android_mobile_op3_jcc
+          - entity: media_player.emby_op3_isset
             state_not: "unavailable" 
         card:
           type: media-control
-          entity: media_player.emby_emby_for_android_mobile_op3_jcc
+          entity: media_player.emby_op3_isset
       - type: conditional
         conditions:
-          - entity: media_player.emby_emby_for_android_mobile_oneplus_a3003
+          - entity: media_player.emby_jcc_dell_chrome
             state_not: "unavailable" 
         card:
           type: media-control
-          entity: media_player.emby_emby_for_android_mobile_oneplus_a3003
-      - type: conditional
-        conditions:
-          - entity: media_player.emby_emby_for_android_mobile_smj530f
-            state_not: "unavailable" 
-        card:
-          type: media-control
-          entity: media_player.emby_emby_for_android_mobile_smj530f
-      - type: conditional
-        conditions:
-          - entity: media_player.emby_emby_mobile_chrome_2
-            state_not: "unavailable" 
-        card:
-          type: media-control
-          entity: media_player.emby_emby_mobile_chrome_2
-      - type: conditional
-        conditions:
-          - entity: media_player.emby_emby_mobile_chrome_4
-            state_not: "unavailable" 
-        card:
-          type: media-control
-          entity: media_player.emby_emby_mobile_chrome_4
-      - type: conditional
-        conditions:
-          - entity: media_player.emby_emby_mobile_chrome_5
-            state_not: "unavailable" 
-        card:
-          type: media-control
-          entity: media_player.emby_emby_mobile_chrome_5
-      - type: conditional
-        conditions:
-          - entity: media_player.emby_emby_for_android_mobile_ulefone_s7
-            state_not: "unavailable" 
-        card:
-          type: media-control
-          entity: media_player.emby_emby_for_android_mobile_ulefone_s7
+          entity: media_player.emby_jcc_dell_chrome
 
-#  - entity: media_player.comedor
-#    type: "custom:mini-media-player"
-#    name: Alexa Mini
-#    artwork: cover
-#    power_color: true
-#    hide_volume: false
-#    show_progress: true
+

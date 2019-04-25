@@ -1,85 +1,198 @@
 title: Casa
 icon: mdi:home-outline
 cards:
-  - type: entities
-    title: Comedor
-    show_header_toggle: false
-    entities:
-      - sensor.comedor_temperatura
-      - sensor.comedor_humedad
-      - sensor.comedor_presion
-      - sensor.windchill_comedor
-      - sensor.comedor_iluminacion
-      - binary_sensor.comedor_movimiento
-      - switch.comedor_enchufe
-      - light.gateway_luz
-      - binary_sensor.comedor_aire_acondicionado
-      - binary_sensor.comedor_ventana_izq
-      - binary_sensor.comedor_ventana_der
+  - type: custom:card-modder
+    card:
+      type: entities
+      title: Comedor
+      show_header_toggle: false
+      entities:
+        - sensor.comedor_temperatura
+        - sensor.comedor_humedad
+        - sensor.comedor_presion
+        - sensor.windchill_comedor
+        - sensor.comedor_iluminacion
+        - binary_sensor.comedor_movimiento
+        - switch.comedor_enchufe
+        - light.gateway_luz
+        - binary_sensor.comedor_aire_acondicionado
+        - binary_sensor.comedor_ventana_izq
+        - binary_sensor.comedor_ventana_der
+    style:                 
+      border-radius: 20px
+      border: solid 1px rgba(100,100,100,0.3)
+      box-shadow: 3px 3px rgba(0,0,0,0.4)    
+      overflow: hidden
+      background-repeat: no-repeat
+      background-color: rgba(50,50,50,0.1)
+      background-size: 100% 200px
 
-  - type: entities
-    title: Dormitorio
-    show_header_toggle: false
-    entities:
-      - sensor.dormitorio_temperatura
-      - sensor.dormitorio_humedad
-      - sensor.dormitorio_presion
-      - sensor.windchill_dormitorio
+  - type: custom:card-modder
+    card:
+      type: entities
+      title: Dormitorio
+      show_header_toggle: false
+      entities:
+        - sensor.dormitorio_temperatura
+        - sensor.dormitorio_humedad
+        - sensor.dormitorio_presion
+        - sensor.windchill_dormitorio
+    style:                 
+      border-radius: 20px
+      border: solid 1px rgba(100,100,100,0.3)
+      box-shadow: 3px 3px rgba(0,0,0,0.4)    
+      overflow: hidden
+      background-repeat: no-repeat
+      background-color: rgba(50,50,50,0.1)
+      background-size: 100% 200px
       
-  - type: entities
-    title: Habitacion Ania
-    show_header_toggle: false
-    entities:
-      - sensor.ania_temperatura
-      - sensor.ania_humedad
-      - sensor.ania_presion
-      - sensor.windchill_ania
+  - type: custom:card-modder
+    card:
+      type: entities
+      title: Habitacion Ania
+      show_header_toggle: false
+      entities:
+        - sensor.ania_temperatura
+        - sensor.ania_humedad
+        - sensor.ania_presion
+        - sensor.windchill_ania
+    style:                 
+      border-radius: 20px
+      border: solid 1px rgba(100,100,100,0.3)
+      box-shadow: 3px 3px rgba(0,0,0,0.4)    
+      overflow: hidden
+      background-repeat: no-repeat
+      background-color: rgba(50,50,50,0.1)
+      background-size: 100% 200px
 
-  - type: entities
-    title: Cocina
-    show_header_toggle: false
-    entities:
-      - sensor.cocina_iluminacion
-      - binary_sensor.cocina_movimiento
-      - switch.cocina_lavavajillas
-      - automation.dishwasher_on
-      - type: custom:time-input-row
-        entity: input_datetime.dishwasher_on
-      - script.dishwasher_auto
+  - type: custom:card-modder
+    card:
+      type: entities
+      title: Cocina
+      show_header_toggle: false
+      entities:
+        - sensor.cocina_temperatura
+        - sensor.cocina_humedad
+        - sensor.windchill_cocina
+        - sensor.cocina_iluminacion
+        - binary_sensor.cocina_movimiento
+        - switch.cocina_lavavajillas
+        - automation.dishwasher_on
+        - type: custom:time-input-row
+          entity: input_datetime.dishwasher_on
+        - script.dishwasher_auto
+    style:                 
+      border-radius: 20px
+      border: solid 1px rgba(100,100,100,0.3)
+      box-shadow: 3px 3px rgba(0,0,0,0.4)    
+      overflow: hidden
+      background-repeat: no-repeat
+      background-color: rgba(50,50,50,0.1)
+      background-size: 100% 200px
 
-  - type: entities
-    title: Despacho
-    show_header_toggle: false
-    entities:
-      - switch.ania_media
-      - automation.miboxania_on
-      - type: custom:time-input-row
-        entity: input_datetime.miboxania_on
-      - automation.miboxania_off
-      - type: custom:time-input-row
-        entity: input_datetime.miboxania_off
+  - type: custom:card-modder
+    card:
+      type: entities
+      title: Despacho
+      show_header_toggle: false
+      entities:
+        - sensor.despacho_temperatura
+        - sensor.despacho_humedad
+        - sensor.windchill_despacho
+        - type: divider
+        - switch.ania_media
+        - automation.miboxania_on
+        - type: custom:time-input-row
+          entity: input_datetime.miboxania_on
+        - automation.miboxania_off
+        - type: custom:time-input-row
+          entity: input_datetime.miboxania_off
+    style:                 
+      border-radius: 20px
+      border: solid 1px rgba(100,100,100,0.3)
+      box-shadow: 3px 3px rgba(0,0,0,0.4)    
+      overflow: hidden
+      background-repeat: no-repeat
+      background-color: rgba(50,50,50,0.1)
+      background-size: 100% 200px
 
-  - type: entities
-    title: Entrada
-    show_header_toggle: false
-    entities:
-      - entity: binary_sensor.entrada_puerta
-        secondary_info: last-changed
-      - entity: binary_sensor.entrada_pulsador
-        secondary_info: last-changed
-      - entity: binary_sensor.llavero_jcc
-        secondary_info: last-changed
-      - entity: binary_sensor.llavero_isset
-        secondary_info: last-changed
-      - entity: binary_sensor.llavero_ania
-        secondary_info: last-changed
-#      - group.telegram
+  - type: custom:card-modder
+    card:
+      type: entities
+      title: Baño
+      show_header_toggle: false
+      entities:
+        - sensor.bano_temperatura
+        - sensor.bano_humedad
+        - sensor.windchill_bano
+    style:                 
+      border-radius: 20px
+      border: solid 1px rgba(100,100,100,0.3)
+      box-shadow: 3px 3px rgba(0,0,0,0.4)    
+      overflow: hidden
+      background-repeat: no-repeat
+      background-color: rgba(50,50,50,0.1)
+      background-size: 100% 200px
 
-  - type: entities
-    title: Balcon
-    show_header_toggle: false
-    entities:
-      - sensor.balcon_temperatura
-      - sensor.balcon_humedad
-      - sensor.balcon_presion
-      - sensor.windchill_balcon
+  - type: custom:card-modder
+    card:
+      type: entities
+      title: Invitados
+      show_header_toggle: false
+      entities:
+        - sensor.invitados_temperatura
+        - sensor.invitados_humedad
+        - sensor.windchill_invitados
+    style:                 
+      border-radius: 20px
+      border: solid 1px rgba(100,100,100,0.3)
+      box-shadow: 3px 3px rgba(0,0,0,0.4)    
+      overflow: hidden
+      background-repeat: no-repeat
+      background-color: rgba(50,50,50,0.1)
+      background-size: 100% 200px
+
+  - type: custom:card-modder
+    card:
+      type: entities
+      title: Entrada
+      show_header_toggle: false
+      entities:
+        - entity: binary_sensor.entrada_puerta
+          secondary_info: last-changed
+        - entity: binary_sensor.entrada_pulsador
+          secondary_info: last-changed
+        - entity: binary_sensor.llavero_jcc
+          secondary_info: last-changed
+        - entity: binary_sensor.llavero_isset
+          secondary_info: last-changed
+        - entity: binary_sensor.llavero_ania
+          secondary_info: last-changed
+#        - group.telegram
+    style:                 
+      border-radius: 20px
+      border: solid 1px rgba(100,100,100,0.3)
+      box-shadow: 3px 3px rgba(0,0,0,0.4)    
+      overflow: hidden
+      background-repeat: no-repeat
+      background-color: rgba(50,50,50,0.1)
+      background-size: 100% 200px
+
+  - type: custom:card-modder
+    card:
+      type: entities
+      title: Balcon
+      show_header_toggle: false
+      entities:
+        - sensor.balcon_temperatura
+        - sensor.balcon_humedad
+        - sensor.balcon_presion
+        - sensor.windchill_balcon
+    style:                 
+      border-radius: 20px
+      border: solid 1px rgba(100,100,100,0.3)
+      box-shadow: 3px 3px rgba(0,0,0,0.4)    
+      overflow: hidden
+      background-repeat: no-repeat
+      background-color: rgba(50,50,50,0.1)
+      background-size: 100% 200px

@@ -1,94 +1,189 @@
 title: Meteo
 icon: mdi:cloud-question
 cards:
-  - type: sensor
-    entity: sensor.co2_intensity_es
-    name: Contaminación
-    graph: line
+  - type: custom:card-modder
+    card:
+      type: sensor
+      entity: sensor.co2_intensity_es
+      name: Contaminación
+      graph: line
+    style:                 
+      border-radius: 20px
+      border: solid 1px rgba(100,100,100,0.3)
+      box-shadow: 3px 3px rgba(0,0,0,0.4)    
+      overflow: hidden
+      background-repeat: no-repeat
+      background-color: rgba(50,50,50,0.1)
+      background-size: 100% 200px
 
   - type: custom:vertical-stack-in-card
     cards:
-      - type: entities
-        entities:
-         - sensor.u_s_air_pollution_level
-      - type: custom:mini-graph-card
-        entities:
-          - sensor.u_s_air_quality_index
-        line_color: var(--accent-color)
-        line_width: 8
-        font_size: 75
-        color_thresholds:
-          - value: 0
-            color: "#00ffbf"
-          - value: 51
-            color: "#00ff40"
-          - value: 101
-            color: "#ffbf00"
-          - value: 151
-            color: "#ff8000"
-          - value: 201
-            color: "#ff0000"
-          - value: 301
-            color: "#000000"
+      - type: custom:card-modder
+        card:
+          type: entities
+          entities:
+            - sensor.u_s_air_pollution_level
+        style:
+          border-radius: 20px 20px 0px 0px
+          border: solid 1px rgba(100,100,100,0.3)
+          box-shadow: 3px 3px rgba(0,0,0,0.4)    
+          overflow: hidden
+          background-repeat: no-repeat
+          background-color: rgba(50,50,50,0.1)
+          background-size: 100% 200px
+      - type: custom:card-modder
+        card:
+          type: custom:mini-graph-card
+          entities:
+            - sensor.u_s_air_quality_index
+          line_color: var(--accent-color)
+          line_width: 8
+          font_size: 75
+          color_thresholds:
+            - value: 0
+              color: "#f0ffbf"
+            - value: 51
+              color: "#f0ff40"
+            - value: 101
+              color: "#ffbf00"
+            - value: 151
+              color: "#ff8000"
+            - value: 201
+              color: "#ff0000"
+            - value: 301
+              color: "#000000"
+        style:
+          border-radius: 0px 0px 20px 20px
+          border: solid 1px rgba(100,100,100,0.3)
+          box-shadow: 3px 3px rgba(0,0,0,0.4)    
+          overflow: hidden
+          background-repeat: no-repeat
+          background-color: rgba(50,50,50,0.05)
+          background-size: 100% 200px
 
-  - type: custom:weather-card
-    entity: weather.dark_sky
-    entity_sun: sun.sun
-    icons: "/local/icons/weather_icons/animated/"
+  - type: custom:card-modder
+    card:
+      type: glance
+      entities:
+        - entity: sensor.comedor_temperatura
+          name: Comedor
+        - entity: sensor.dormitorio_temperatura
+          name: Dormitorio
+        - entity: sensor.ania_temperatura
+          name: Ania
+        - entity: sensor.balcon_temperatura
+          name: Balcon
+    style:                 
+      border-radius: 20px
+      border: solid 1px rgba(100,100,100,0.3)
+      box-shadow: 3px 3px rgba(0,0,0,0.4)    
+      overflow: hidden
+      background-repeat: no-repeat
+      background-color: rgba(50,50,50,0.1)
+      background-size: 100% 200px
 
-  - type: glance
-    entities:
-      - entity: sensor.comedor_temperatura
-        name: Comedor
-      - entity: sensor.dormitorio_temperatura
-        name: Dormitorio
-      - entity: sensor.ania_temperatura
-        name: Ania
-      - entity: sensor.balcon_temperatura
-        name: Balcon
-      
-  - type: entities
-    show_header_toggle: false
-    entities:
-    - entity: sensor.dark_sky_summary
-      name: Resumen
-    - entity: sensor.dark_sky_nearest_storm_distance
-      name: Distancia tormenta más cercana
-    - sensor.dark_sky_nearest_storm_bearing
-    - sensor.storm_dir
-    - entity: sensor.dark_sky_humidity
-      name: Humedad
-    - entity: sensor.dark_sky_temperature
-      name: Temperatura
-    - entity: sensor.dark_sky_apparent_temperature
-      name: Sensación térmica
-    - entity: sensor.dark_sky_wind_speed
-      name: Velocidad del viento
-    - sensor.wind_dir
-    - entity: sensor.dark_sky_precip
-      name: Precipitación
-    - entity: sensor.dark_sky_precip_probability
-      name: Probabilidad lluvia
-    - entity: sensor.dark_sky_precip_intensity
-      name: Intensidad lluvia
-    - entity: sensor.dark_sky_uv_index
-      name: Indice UV
-    - entity: sensor.dark_sky_daily_summary
-      name: Resumen diario
-    - entity: sensor.dark_sky_pressure
-      name: Presion
-    - entity: sensor.dark_sky_visibility
-      name: Visibilidad
+  - type: custom:card-modder
+    card:
+      type: custom:weather-card
+      entity: weather.dark_sky
+      entity_sun: sun.sun
+#      name: Barcelona
+      icons: "/local/icons/weather_icons/animated/"
+    style:                 
+      border-radius: 20px
+      border: solid 1px rgba(100,100,100,0.3)
+      box-shadow: 3px 3px rgba(0,0,0,0.4)    
+      overflow: hidden
+      background-repeat: no-repeat
+      background-color: rgba(50,50,50,0.1)
+      background-size: 100% 200px
 
-  - type: picture-entity
-    entity: camera.meteo_fijo
-    show_name: true
-    show_state: false
+  - type: custom:card-modder
+    card:
+      type: entities
+      show_header_toggle: false
+      entities:
+      - entity: sensor.barcelona_summary
+        name: Resumen
+#      - entity: sensor.dark_sky_nearest_storm_distance
+#        name: Distancia tormenta más cercana
+#      - sensor.dark_sky_nearest_storm_bearing
+#      - sensor.storm_dir
+      - entity: sensor.barcelona_humidity
+        name: Humedad
+      - entity: sensor.barcelona_temperature
+        name: Temperatura
+      - entity: sensor.barcelona_apparent_temperature
+        name: Sensación térmica
+      - entity: sensor.barcelona_wind_speed
+        name: Velocidad del viento
+      - sensor.wind_dir
+      - entity: sensor.barcelona_precip
+        name: Precipitación
+      - entity: sensor.barcelona_precip_probability
+        name: Probabilidad lluvia
+      - entity: sensor.barcelona_precip_intensity
+        name: Intensidad lluvia
+      - entity: sensor.barcelona_uv_index
+        name: Indice UV
+      - entity: sensor.barcelona_daily_summary
+        name: Resumen diario
+      - entity: sensor.barcelona_pressure
+        name: Presion
+      - entity: sensor.barcelona_visibility
+        name: Visibilidad
+    style:                 
+      border-radius: 20px
+      border: solid 1px rgba(100,100,100,0.3)
+      box-shadow: 3px 3px rgba(0,0,0,0.4)    
+      overflow: hidden
+      background-repeat: no-repeat
+      background-color: rgba(50,50,50,0.1)
+      background-size: 100% 200px
 
-  - type: picture-entity
-    entity: camera.meteo_movil
-    show_name: true
-    show_state: false
+  - type: custom:card-modder
+    card:
+      type: picture-entity
+      entity: camera.meteo_fijo
+      show_name: true
+      show_state: false
+    style:                 
+      border-radius: 20px
+      border: solid 1px rgba(100,100,100,0.3)
+      box-shadow: 3px 3px rgba(0,0,0,0.4)    
+      overflow: hidden
+      background-repeat: no-repeat
+      background-color: rgba(50,50,50,0.1)
+      background-size: 100% 200px
+
+  - type: custom:card-modder
+    card:
+      type: picture-entity
+      entity: camera.meteo_movil
+      show_name: true
+      show_state: false
+    style:                 
+      border-radius: 20px
+      border: solid 1px rgba(100,100,100,0.3)
+      box-shadow: 3px 3px rgba(0,0,0,0.4)    
+      overflow: hidden
+      background-repeat: no-repeat
+      background-color: rgba(50,50,50,0.1)
+      background-size: 100% 200px
+
+  - type: custom:card-modder
+    card:
+      type: iframe
+      url: 'https://www.ventusky.com/?p=41.43;2.20;6&l=clouds-total'
+      aspect_ratio: 113%
+    style:                 
+      border-radius: 20px
+      border: solid 1px rgba(100,100,100,0.3)
+      box-shadow: 3px 3px rgba(0,0,0,0.4)    
+      overflow: hidden
+      background-repeat: no-repeat
+      background-color: rgba(50,50,50,0.1)
+      background-size: 100% 200px
 
 #  - type: custom:dark-sky-weather-card
 #    title: XXXXXXXXXXXXXXX

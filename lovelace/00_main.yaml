@@ -2,119 +2,270 @@ title: Main
 cards:
   - type: custom:vertical-stack-in-card
     cards:
-      - type: glance
-        entities:
-          - device_tracker.amazfit_bip_watch
-          - device_tracker.mi_band_2_isset
-          - device_tracker.mi_band_2_ania
-      - type: custom:monster-card
-        show_empty: false
+      - type: custom:card-modder
         card:
           type: glance
-#      show_state: false
-#      show_header_toggle: false
-        filter:
-          include:
-            - domain: device_tracker
-              state: home
-          exclude:
-            - entity_id: device_tracker.amazfit_bip_watch
-            - entity_id: device_tracker.mi_band_2_isset
-            - entity_id: device_tracker.mi_band_2_ania
+          entities:
+            - device_tracker.amazfit_bip_watch
+            - device_tracker.mi_band_2_isset
+            - device_tracker.mi_band_2_ania
+        style:
+          border-radius: 20px
+          border: solid 1px rgba(100,100,100,0.3)
+          box-shadow: 3px 3px rgba(0,0,0,0.4)    
+          overflow: hidden
+          background-repeat: no-repeat
+          background-color: rgba(50,50,50,0.1)
+          background-size: 100% 200px
+      - type: custom:card-modder
+        card:
+          type: custom:monster-card
+          show_empty: false
+          card:
+            type: glance
+          filter:
+            include:
+              - domain: device_tracker
+                state: home
+            exclude:
+              - entity_id: device_tracker.amazfit_bip_watch
+              - entity_id: device_tracker.mi_band_2_isset
+              - entity_id: device_tracker.mi_band_2_ania
+        style:
+          border-radius: 0px 0px 20px 20px
+          border: solid 1px rgba(100,100,100,0.3)
+          box-shadow: 3px 3px rgba(0,0,0,0.4)    
+          overflow: hidden
+          background-repeat: no-repeat
+          background-color: rgba(50,50,50,0.1)
+          background-size: 100% 200px
 
   - type: custom:vertical-stack-in-card
     cards:
-      - type: custom:mini-graph-card
-        entities:
-          - sensor.comedor_temperatura
-        name: Comedor
-        line_color: var(--accent-color)
-        line_width: 8
-        font_size: 75
-        color_thresholds:
-          - value: -10
-            color: "#0000FF"
-          - value: 12
-            color: "#00FF00"
-          - value: 27
-            color: "#FF0000"
-      - type: custom:mini-graph-card
-        entities:
-          - sensor.dormitorio_temperatura
-        name: Dormitorio
-        line_color: var(--accent-color)
-        line_width: 8
-        font_size: 75
-        color_thresholds:
-          - value: -10
-            color: "#0000FF"
-          - value: 12
-            color: "#00FF00"
-          - value: 27
-            color: "#FF0000"
-      - type: custom:mini-graph-card
-        entities:
-          - sensor.ania_temperatura
-        name: Habitación Ania
-        line_color: var(--accent-color)
-        line_width: 8
-        font_size: 75
-        color_thresholds:
-          - value: -10
-            color: "#0000FF"
-          - value: 12
-            color: "#00FF00"
-          - value: 27
-            color: "#FF0000"
-      - type: custom:mini-graph-card
-        entities:
-          - sensor.balcon_temperatura
-        name: Balcón
-        line_color: var(--accent-color)
-        line_width: 8
-        font_size: 75
-        color_thresholds:
-          - value: -10
-            color: "#0000FF"
-          - value: 12
-            color: "#00FF00"
-          - value: 27
-            color: "#FF0000"
+      - type: custom:card-modder
+        card:
+          type: custom:mini-graph-card
+          entities:
+            - sensor.comedor_temperatura
+          name: Comedor
+          line_color: var(--accent-color)
+          line_width: 8
+          font_size: 75
+          color_thresholds:
+            - value: -10
+              color: "#0000FF"
+            - value: 16
+              color: "#6cae11"
+            - value: 28
+              color: "#FF0000"
+        style:
+          border-radius: 20px 20px 0px 0px
+          border: solid 1px rgba(100,100,100,0.3)
+          box-shadow: 3px 3px rgba(0,0,0,0.4)    
+          overflow: hidden
+          background-repeat: no-repeat
+          background-color: rgba(50,50,50,0.1)
+          background-size: 100% 200px
+      - type: custom:card-modder
+        card:
+          type: custom:mini-graph-card
+          entities:
+            - sensor.dormitorio_temperatura
+          name: Dormitorio
+          line_color: var(--accent-color)
+          line_width: 8
+          font_size: 75
+          color_thresholds:
+            - value: -10
+              color: "#0000FF"
+            - value: 16
+              color: "#6cae11"
+            - value: 28
+              color: "#FF0000"
+        style:
+          border-radius: 0px 0px 0px 0px
+          border: solid 1px rgba(100,100,100,0.3)
+          box-shadow: 3px 3px rgba(0,0,0,0.4)    
+          overflow: hidden
+          background-repeat: no-repeat
+          background-color: rgba(50,50,50,0.1)
+          background-size: 100% 200px
+      - type: custom:card-modder
+        card:
+          type: custom:mini-graph-card
+          entities:
+            - sensor.ania_temperatura
+          name: Habitación Ania
+          line_color: var(--accent-color)
+          line_width: 8
+          font_size: 75
+          color_thresholds:
+            - value: -10
+              color: "#0000FF"
+            - value: 16
+              color: "#6cae11"
+            - value: 28
+              color: "#FF0000"
+        style:
+          border-radius: 0px 0px 0px 0px
+          border: solid 1px rgba(100,100,100,0.3)
+          box-shadow: 3px 3px rgba(0,0,0,0.4)    
+          overflow: hidden
+          background-repeat: no-repeat
+          background-color: rgba(50,50,50,0.1)
+          background-size: 100% 200px
+      - type: custom:card-modder
+        card:
+          type: custom:mini-graph-card
+          entities:
+            - sensor.balcon_temperatura
+          name: Balcón
+          line_color: var(--accent-color)
+          line_width: 8
+          font_size: 75
+          color_thresholds:
+            - value: -10
+              color: "#0000FF"
+            - value: 16
+              color: "#6cae11"
+            - value: 28
+              color: "#FF0000"
+        style:
+          border-radius: 0px 0px 20px 20px
+          border: solid 1px rgba(100,100,100,0.3)
+          box-shadow: 3px 3px rgba(0,0,0,0.4)    
+          overflow: hidden
+          background-repeat: no-repeat
+          background-color: rgba(50,50,50,0.1)
+          background-size: 100% 200px
 
   - type: custom:vertical-stack-in-card
     cards:
-      - type: thermostat
-        entity: climate.aa_comedor
-        name: Comedor
-      - type: entities
-        entities:
-          - type: divider
-          - input_number.aa_comedor_temp_heat_on
-          - input_number.aa_comedor_temp_heat_auto
-          - type: divider
-          - input_number.aa_comedor_temp_cool_on
-          - input_number.aa_comedor_temp_cool_auto
-          - type: divider
-          - group.aa_comedor_automatismos
-    
-  - type: custom:monster-card
-    show_empty: false
+      - type: custom:card-modder
+        card:
+          type: thermostat
+          entity: climate.aa_comedor
+          name: Comedor
+        style:
+          border-radius: 20px 20px 0px 0px
+          border: solid 1px rgba(100,100,100,0.3)
+          box-shadow: 3px 3px rgba(0,0,0,0.4)    
+          overflow: hidden
+          background-repeat: no-repeat
+          background-color: rgba(50,50,50,0.1)
+          background-size: 100% 200px
+      - type: custom:card-modder
+        card:
+          type: entities
+          entities:
+            - type: divider
+            - binary_sensor.aa_agua
+            - type: divider
+            - input_number.aa_comedor_temp_heat_on
+            - input_number.aa_comedor_temp_heat_auto
+            - type: divider
+            - input_number.aa_comedor_temp_cool_on
+            - input_number.aa_comedor_temp_cool_auto
+            - type: divider
+            - group.aa_comedor_automatismos
+        style:
+          border-radius: 0px 0px 20px 20px
+          border: solid 1px rgba(100,100,100,0.3)
+          box-shadow: 3px 3px rgba(0,0,0,0.4)    
+          overflow: hidden
+          background-repeat: no-repeat
+          background-color: rgba(50,50,50,0.1)
+          background-size: 100% 200px
+
+  - type: custom:card-modder
     card:
-      type: glance
-      title: Baterias a controlar
-    filter:
-      include:
-        - entity_id: sensor.battery*
-          state: < 25
+      type: custom:monster-card
+      show_empty: false
+      card:
+        type: glance
+        title: Baterias a controlar
+      filter:
+        include:
+          - entity_id: sensor.battery*
+            state: < 25
+    style:
+      border-radius: 20px
+      border: solid 1px rgba(100,100,100,0.3)
+      box-shadow: 3px 3px rgba(0,0,0,0.4)    
+      overflow: hidden
+      background-repeat: no-repeat
+      background-color: rgba(50,50,50,0.1)
+      background-size: 100% 200px
           
-  - type: entities
-    title: Trayectos
-    show_header_toggle: false
-    entities:
-      - input_select.origin
-      - input_select.destination
-      - sensor.trayecto
-    
+  - type: custom:vertical-stack-in-card
+    cards:
+      - type: custom:card-modder
+        card:
+          type: entities
+          title: Trayectos
+          show_header_toggle: false
+          entities:
+            - input_select.origin
+            - input_select.destination
+#            - sensor.trayecto
+        style:
+          border-radius: 20px 20px 0px 0px
+          border: solid 1px rgba(100,100,100,0.3)
+          box-shadow: 3px 3px rgba(0,0,0,0.4)    
+          overflow: hidden
+          background-repeat: no-repeat
+          background-color: rgba(50,50,50,0.1)
+          background-size: 100% 200px
+      - type: custom:card-modder
+        card:
+          type: custom:waze-card
+          entities:
+            - entity: sensor.trayecto
+              zone: zone.home
+              name: Trayecto
+        style:
+          border-radius: 0px 0px 0px 0px
+          border: solid 1px rgba(100,100,100,0.3)
+          box-shadow: 3px 3px rgba(0,0,0,0.4)    
+          overflow: hidden
+          background-repeat: no-repeat
+          background-color: rgba(50,50,50,0.1)
+          background-size: 100% 200px
+      - type: custom:card-modder
+        card:
+          type: entities
+#          title: Trayectos
+          show_header_toggle: false
+          entities:
+            - sensor.trayecto_colegio
+        style:
+          border-radius: 0px 0px 20px 20px
+          border: solid 1px rgba(100,100,100,0.3)
+          box-shadow: 3px 3px rgba(0,0,0,0.4)    
+          overflow: hidden
+          background-repeat: no-repeat
+          background-color: rgba(50,50,50,0.1)
+          background-size: 100% 200px
+
+  - type: custom:card-modder
+    card:
+      type: alarm-panel
+#      title: Comedor
+      show_header_toggle: false
+      entity: alarm_control_panel.alarma
+      states:
+        - arm_away
+        - arm_night
+    style:                 
+      border-radius: 20px
+      border: solid 1px rgba(100,100,100,0.3)
+      box-shadow: 3px 3px rgba(0,0,0,0.4)    
+      overflow: hidden
+      background-repeat: no-repeat
+      background-color: rgba(50,50,50,0.1)
+      background-size: 100% 200px
+
+
 popup_cards:
   group.aa_comedor_automatismos:
     title: Programacion
@@ -135,3 +286,9 @@ popup_cards:
         - type: custom:time-input-row
           entity: input_datetime.aa_comedor_off_festivo
 
+  binary_sensor.aa_agua:
+    title: Mensajes deposito agua
+    card:
+      type: entities
+      entities:
+        - automation.aa_agua_msg

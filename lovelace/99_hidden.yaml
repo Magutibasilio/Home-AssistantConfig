@@ -15,16 +15,22 @@ cards:
     title: comedor
     show_header_toggle: false
     entities:
-      - alarm_control_panel.alarma
+      - automation.aa_agua_msg
       - switch.servidor_medidor
       - input_datetime.aa_comedor_off_festivo
       - input_datetime.aa_comedor_off_laborable
       - input_datetime.aa_comedor_on_festivo
       - input_datetime.aa_comedor_on_laborable
+      - automation.dash1
       - script.aa_comedor_auto
       - script.aa_comedor_cool
       - script.aa_comedor_heat
       - script.aa_comedor_off
+      - automation.aa_comedor_off_festivo
+      - automation.aa_comedor_off_laborable
+      - automation.aa_comedor_on_festivo
+      - automation.aa_comedor_on_laborable
+      - automation.comedor_luzpaso
 
   - type: entities
     title: vacuum
@@ -32,6 +38,7 @@ cards:
     entities:
       - vacuum.clin
       - automation.vacuum_auto_on
+      - group.vacuum_auto_on
       - sensor.vacuum_battery_level
       - sensor.vacuum_clean_stop
       - sensor.vacuum_cleaned_area
@@ -45,12 +52,9 @@ cards:
       - sensor.vacuum_side_brush_left
       - sensor.vacuum_status
       - sensor.vacuum_total_cleaned_area
-      - sensor.vacuum_total_cleaning_time   
-
-  - type: entities
-    title: telegram
-    show_header_toggle: false
-    entities:
+      - sensor.vacuum_total_cleaning_time
+      - script.vacuum_home
+      - script.vacuum_on
       - automation.vacuum_msg_charging
       - automation.vacuum_msg_error
       - automation.vacuum_msg_finish
@@ -62,6 +66,7 @@ cards:
     title: servidor
     show_header_toggle: false
     entities:
+      - automation.zigbee_lost_connection
       - binary_sensor.workday_sensor
       - script.backup_emby_update_sensors
       - script.backup_ha_update_sensors
@@ -74,14 +79,16 @@ cards:
       - sensor.server_cost_daily
       - sensor.server_cost_hourly
       - sensor.server_cost_monthly
-      - sensor.server_cost_total
       - sensor.server_cost_weekly
       - sensor.server_cost_yearly
+      - sensor.process_amule
+      - sensor.amule_cpu
 
   - type: entities
     title: tracker
     show_header_toggle: false
     entities:
+      - automation.aviso_trafico_colegio
       - device_tracker.amazfit_cor
       - device_tracker.mi_band_2_juanrubio
       - sensor.dest_address
@@ -92,30 +99,55 @@ cards:
     show_header_toggle: false
     entities:
       - sun.sun
-      - automation.weather_msg_storm
-      - sensor.dark_sky_icon
-      - sensor.dark_sky_wind_bearing
-      - sensor.tormenta
+      - sensor.barcelona_icon
+      - sensor.barcelona_wind_bearing
       - sensor.u_s_main_pollutant
 
   - type: entities
     title: media
     show_header_toggle: false
     entities:
+      - automation.a_adb_start
       - media_player.this_device
+      - media_player.alexa_op3_jcc
+      - media_player.alexa_en_todas_partes
+      - sensor.ffmpeg_cpu
+      - sensor.process_ffmpeg
 
   - type: entities
-    title: media
+    title: entrada
     show_header_toggle: false
     entities:
-      - automation.a_adb_start
-      - automation.aa_comedor_off_festivo
-      - automation.aa_comedor_off_laborable
-      - automation.aa_comedor_on_festivo
-      - automation.aa_comedor_on_laborable
       - automation.alarma_apagada_ania
       - automation.alarma_apagada_isset
       - automation.alarma_apagada_jcc
-      - automation.comedor_luzpaso
-      - automation.dash1
+
+  - type: entities
+    title: info
+    show_header_toggle: false
+    entities:
       - automation.scrape_tarifa_luz
+
+  - type: entities
+    title: baterias
+    show_header_toggle: false
+    entities:
+      - sensor.battery_aa_agua
+      - sensor.battery_ania_temperatura
+      - sensor.battery_balcon_temperatura
+      - sensor.battery_bano_temperatura
+      - sensor.battery_cocina_movimiento
+      - sensor.battery_cocina_temperatura
+      - sensor.battery_comedor_aa
+      - sensor.battery_comedor_movimiento
+      - sensor.battery_comedor_temperatura
+      - sensor.battery_comedor_ventana_der
+      - sensor.battery_comedor_ventana_izq
+      - sensor.battery_despacho_temperatura
+      - sensor.battery_dormitorio_temperatura
+      - sensor.battery_entrada_puerta
+      - sensor.battery_entrada_pulsador
+      - sensor.battery_invitados_temperatura
+      - sensor.battery_llavero_ania
+      - sensor.battery_llavero_isset
+      - sensor.battery_llavero_jcc
