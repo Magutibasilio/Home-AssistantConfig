@@ -1,1 +1,0 @@
-sudo source /srv/homeassistant/bin/activate
