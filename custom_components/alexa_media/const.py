@@ -3,6 +3,7 @@
 #  SPDX-License-Identifier: Apache-2.0
 """
 Support to interface with Alexa Devices.
+
 For more details about this platform, please refer to the documentation at
 https://community.home-assistant.io/t/echo-devices-alexa-as-media-player-testers-needed/58639
 """
@@ -17,7 +18,8 @@ MIN_TIME_BETWEEN_SCANS = SCAN_INTERVAL
 MIN_TIME_BETWEEN_FORCED_SCANS = timedelta(seconds=1)
 
 ALEXA_COMPONENTS = [
-    'media_player'
+    'media_player',
+    'notify'
 ]
 
 CONF_ACCOUNTS = 'accounts'
