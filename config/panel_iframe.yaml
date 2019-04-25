@@ -1,29 +1,34 @@
-router:
-  title: 'Router Xiaomi'
-  icon: mdi:router-wireless
-  url: 'http://192.168.3.1/cgi-bin/luci'
+#router:
+#  title: 'Router Xiaomi'
+#  icon: mdi:router-wireless
+#  url: 'http://192.168.3.1/cgi-bin/luci'
 
-repetidor:
-  title: 'Repetidor'
-  icon: mdi:router-wireless
-  url: 'http://192.168.3.2'
+#repetidor:
+#  title: 'Repetidor'
+#  icon: mdi:router-wireless
+#  url: 'http://192.168.3.2'
 
 amule:
   title: 'Emule'
   icon: mdi:cloud-download
-  url: 'http://192.168.3.10:9331'
+  url: 'http://:3113'
   
 emby:
   title: 'Emby'
   icon: mdi:video-vintage
-  url: 'https://xxxxxxxx.ddns.us:8920/web/index.html#!/dashboard.html'
+  url: 'https://:8920/web/index.html#!/dashboard.html'
   
 mdi_icon:
   title: 'Material Design Icons'
   icon: mdi:vector-square
   url: 'https://materialdesignicons.com'
     
-tarifadeluz:
-  title: 'Tarifa de Luz'
-  icon: mdi:current-ac
-  url: 'https://tarifaluzhora.es'
+#tarifaluzhora:
+#  title: 'Tarifa Luz Hora'
+#  icon: mdi:current-ac
+#  url: 'https://tarifaluzhora.es'
+
+#tarifadeluz:
+#  title: 'Tarifa de Luz'
+#  icon: mdi:current-ac
+#  url: 'https://tarifadeluz.com'
